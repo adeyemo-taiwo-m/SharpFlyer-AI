@@ -42,7 +42,14 @@ export function createCoreDataStoreState(): CoreDataStoreState {
   };
 }
 
-let defaultStoreState = createCoreDataStoreState();
+const GLOBAL_CORE_STORE_KEY = "__sharpflyer_core_store_state__";
+const globalForCoreStore = globalThis as unknown as {
+  [GLOBAL_CORE_STORE_KEY]?: CoreDataStoreState;
+};
+
+let defaultStoreState: CoreDataStoreState =
+  globalForCoreStore[GLOBAL_CORE_STORE_KEY] ?? createCoreDataStoreState();
+globalForCoreStore[GLOBAL_CORE_STORE_KEY] = defaultStoreState;
 
 export function getDefaultCoreDataStoreState(): CoreDataStoreState {
   return defaultStoreState;
@@ -50,6 +57,7 @@ export function getDefaultCoreDataStoreState(): CoreDataStoreState {
 
 export function resetDefaultCoreDataStoreState(): void {
   defaultStoreState = createCoreDataStoreState();
+  globalForCoreStore[GLOBAL_CORE_STORE_KEY] = defaultStoreState;
 }
 
 function nowIso(): string {
@@ -334,6 +342,38 @@ export class CoreRepository {
     const allowed = forbidCrossUser(this.actor, row.user_id);
     if (!allowed.ok) return allowed;
     return ok({ ...row });
+  }
+
+  listFlyerVersions(flyerId: string): Result<FlyerVersionRow[], AppError> {
+    const flyer = this.state.flyers.get(flyerId);
+    if (!flyer) return err(createAppError("NOT_FOUND", "We could not find that item."));
+    const allowed = forbidCrossUser(this.actor, flyer.user_id);
+    if (!allowed.ok) return allowed;
+
+    const versions = Array.from(this.state.flyerVersions.values())
+      .filter((v) => v.flyer_id === flyerId)
+      .sort((a, b) => a.version_number - b.version_number)
+      .map((v) => ({ ...v }));
+    return ok(versions);
+  }
+
+  attachFlyerVersionExportAsset(
+    versionId: string,
+    exportAssetId: string,
+  ): Result<FlyerVersionRow, AppError> {
+    if (this.actor.role !== "service_role") {
+      return err(
+        createAppError("FORBIDDEN", "Only server export functions can attach export assets."),
+      );
+    }
+    const existing = this.state.flyerVersions.get(versionId);
+    if (!existing) return err(createAppError("NOT_FOUND", "We could not find that item."));
+    const updated: FlyerVersionRow = {
+      ...existing,
+      export_asset_id: exportAssetId,
+    };
+    this.state.flyerVersions.set(versionId, updated);
+    return ok({ ...updated });
   }
 
   updateFlyerVersion(): Result<never, AppError> {

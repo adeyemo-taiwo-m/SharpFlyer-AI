@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { z } from "zod";
 
 import { STARTER_FREE_CREDITS } from "@/config/pricing";
@@ -13,12 +14,65 @@ import {
 import type { ProfileRow } from "@/types/database";
 import { err, ok, type Result } from "@/types/result";
 
+export const AUTH_ACCESS_COOKIE = "sb-access-token";
+export const AUTH_ADMIN_COOKIE = "sf-admin-session";
+
 export type SessionUser = {
   id: string;
   email: string;
   emailVerified: boolean;
   phone?: string;
 };
+
+function getSessionSecret(): string {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY ?? "local-dev-session-secret";
+}
+
+/**
+ * Encodes a signed session token for local/dev and server-verified sessions.
+ */
+export function encodeSessionToken(user: SessionUser): string {
+  const payload = Buffer.from(JSON.stringify(user), "utf8").toString("base64url");
+  const sig = createHmac("sha256", getSessionSecret()).update(payload).digest("hex").slice(0, 32);
+  return `${payload}.${sig}`;
+}
+
+/**
+ * Decodes and verifies a signed session token.
+ */
+export function decodeSessionToken(token: string | undefined): SessionUser | null {
+  if (!token) return null;
+  const parts = token.split(".");
+  if (parts.length !== 2) return null;
+  const [payload, sig] = parts;
+  const expectedSig = createHmac("sha256", getSessionSecret()).update(payload).digest("hex").slice(0, 32);
+  if (sig !== expectedSig) return null;
+  try {
+    const parsed = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as SessionUser;
+    if (!parsed || typeof parsed.id !== "string" || typeof parsed.email !== "string") {
+      return null;
+    }
+    return {
+      id: parsed.id,
+      email: parsed.email,
+      emailVerified: Boolean(parsed.emailVerified),
+      phone: parsed.phone,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function readSessionUserFromCookies(): Promise<SessionUser | null> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const raw = cookieStore.get(AUTH_ACCESS_COOKIE)?.value;
+    return decodeSessionToken(raw);
+  } catch {
+    return null;
+  }
+}
 
 export type AuthenticatedContext = {
   user: SessionUser;
@@ -93,7 +147,10 @@ export async function requireUser(
   options: AuthProviderOptions = {},
 ): Promise<Result<AuthenticatedContext, AppError>> {
   ensureNonBrowser();
-  const user = options.sessionUser ?? null;
+  const user =
+    options.sessionUser !== undefined
+      ? options.sessionUser
+      : await readSessionUserFromCookies();
   if (!user || !user.id.trim()) {
     return err(createAppError("UNAUTHENTICATED"));
   }
@@ -237,32 +294,4 @@ export function getGoogleSignInUrl(redirectPath = "/app"): Result<string, AppErr
   return ok(authUrl.toString());
 }
 
-/**
- * Evaluates route access for `/app/*` and `/admin/*` paths (used by middleware and route tests).
- */
-export function evaluateRouteProtection(input: {
-  pathname: string;
-  isAuthenticated: boolean;
-  isAdmin: boolean;
-}): { allowed: boolean; redirectTo?: string; status?: 401 | 403 } {
-  const { pathname, isAuthenticated, isAdmin } = input;
-
-  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
-    if (!isAuthenticated) {
-      return { allowed: false, redirectTo: `/auth?next=${encodeURIComponent(pathname)}`, status: 401 };
-    }
-    if (!isAdmin) {
-      return { allowed: false, redirectTo: "/app", status: 403 };
-    }
-    return { allowed: true };
-  }
-
-  if (pathname === "/app" || pathname.startsWith("/app/")) {
-    if (!isAuthenticated) {
-      return { allowed: false, redirectTo: `/auth?next=${encodeURIComponent(pathname)}`, status: 401 };
-    }
-    return { allowed: true };
-  }
-
-  return { allowed: true };
-}
+export { evaluateRouteProtection } from "@/lib/route-protection";

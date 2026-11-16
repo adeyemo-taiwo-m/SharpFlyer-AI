@@ -18,6 +18,7 @@ export const RenderRequestSchema = z.object({
   }),
   themeId: NonBlankString.max(120),
   purpose: z.enum(["preview", "export"]),
+  fileType: z.enum(["png", "jpg"]).default("png").optional(),
 });
 
 export const RenderIssueSchema = z.object({

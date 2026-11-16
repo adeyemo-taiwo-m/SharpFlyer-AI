@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { evaluateRouteProtection } from "@/server/auth";
+import { evaluateRouteProtection } from "@/lib/route-protection";
 
 export const AUTH_ACCESS_COOKIE = "sb-access-token";
 export const AUTH_ADMIN_COOKIE = "sf-admin-session";

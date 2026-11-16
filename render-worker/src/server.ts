@@ -46,7 +46,7 @@ const server = createServer(async (request, response) => {
       return;
     }
 
-    const result = await renderFlyer(parsed.data as RenderRequest);
+    const result = await renderFlyer(parsed.data as RenderRequest, { output: parsed.data.fileType ?? "png" });
     const publicResult = { jobId: parsed.data.jobId, ok: result.ok, warnings: result.warnings, errors: result.errors, metrics: result.metrics };
     send(response, result.ok && result.outputBuffer ? 200 : 422, { ...publicResult, outputBase64: result.outputBuffer?.toString("base64") });
   } catch (error) {

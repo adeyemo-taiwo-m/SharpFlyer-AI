@@ -38,10 +38,22 @@ export function createStorageServiceState(): StorageServiceState {
   };
 }
 
-let defaultStorageState = createStorageServiceState();
+const GLOBAL_STORAGE_STATE_KEY = "__sharpflyer_storage_state__";
+const globalForStorage = globalThis as unknown as {
+  [GLOBAL_STORAGE_STATE_KEY]?: StorageServiceState;
+};
+
+let defaultStorageState: StorageServiceState =
+  globalForStorage[GLOBAL_STORAGE_STATE_KEY] ?? createStorageServiceState();
+globalForStorage[GLOBAL_STORAGE_STATE_KEY] = defaultStorageState;
+
+export function getDefaultStorageServiceState(): StorageServiceState {
+  return defaultStorageState;
+}
 
 export function resetDefaultStorageServiceState(): void {
   defaultStorageState = createStorageServiceState();
+  globalForStorage[GLOBAL_STORAGE_STATE_KEY] = defaultStorageState;
 }
 
 const EXTENSION_BY_MIME: Record<AllowedUploadMimeType, string> = {
@@ -221,6 +233,90 @@ export function createSignedDownloadUrl(
   return ok({
     url: `/api/storage/download/${asset.id}?expires=${expiresAtMs}&sig=${sig}`,
     expiresAtMs,
+  });
+}
+
+/**
+ * Verifies a signed download token and returns the stored object bytes + asset metadata.
+ */
+export function resolveSignedDownload(
+  assetId: string,
+  expiresRaw: string | null,
+  sigRaw: string | null,
+  options?: {
+    storageState?: StorageServiceState;
+    dbState?: CoreDataStoreState;
+    nowMs?: number;
+  },
+): Result<{ asset: AssetRow; bytes: Buffer }, AppError> {
+  if (!assetId || !expiresRaw || !sigRaw) {
+    return err(createAppError("FORBIDDEN", "Invalid download link."));
+  }
+
+  const expiresAtMs = Number(expiresRaw);
+  const nowMs = options?.nowMs ?? Date.now();
+  if (!Number.isFinite(expiresAtMs) || nowMs > expiresAtMs) {
+    return err(createAppError("FORBIDDEN", "Download link has expired."));
+  }
+
+  const dbState = options?.dbState ?? getDefaultCoreDataStoreState();
+  const storageState = options?.storageState ?? defaultStorageState;
+  const serviceRepo = new CoreRepository({ role: "service_role" }, dbState);
+  const assetRes = serviceRepo.getAsset(assetId);
+  if (!assetRes.ok) return assetRes;
+
+  const asset = assetRes.value;
+  if (asset.deleted_at) {
+    return err(createAppError("NOT_FOUND", "This file has been deleted."));
+  }
+
+  const expectedSig = signToken(`download:${asset.id}:${asset.bucket_path}:${expiresAtMs}`);
+  if (expectedSig !== sigRaw) {
+    return err(createAppError("FORBIDDEN", "Invalid download signature."));
+  }
+
+  const bytes = storageState.storedObjects.get(asset.bucket_path);
+  if (!bytes) {
+    return err(createAppError("NOT_FOUND", "The file bytes could not be found."));
+  }
+
+  return ok({ asset, bytes });
+}
+
+/**
+ * Stores a rendered preview or export image buffer in the private `renders` bucket and creates an `assets` row.
+ */
+export async function storeRenderedAsset(input: {
+  userId: string;
+  kind: "preview" | "export";
+  mimeType: "image/png" | "image/jpeg";
+  bytes: Buffer;
+  width: number;
+  height: number;
+  hash: string;
+  storageState?: StorageServiceState;
+  dbState?: CoreDataStoreState;
+}): Promise<Result<AssetRow, AppError>> {
+  const storageState = input.storageState ?? defaultStorageState;
+  const dbState = input.dbState ?? getDefaultCoreDataStoreState();
+  const assetId = randomUUID();
+  const ext = input.mimeType === "image/jpeg" ? "jpg" : "png";
+  const bucketPath = `${input.userId}/${input.kind}/${assetId}.${ext}`;
+
+  storageState.storedObjects.set(bucketPath, input.bytes);
+
+  const serviceRepo = new CoreRepository({ role: "service_role" }, dbState);
+  return serviceRepo.insertAsset({
+    id: assetId,
+    user_id: input.userId,
+    kind: input.kind,
+    bucket: "renders",
+    bucket_path: bucketPath,
+    hash: input.hash,
+    width: input.width,
+    height: input.height,
+    mime_type: input.mimeType,
+    size_bytes: input.bytes.length,
   });
 }
 
