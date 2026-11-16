@@ -1,5 +1,4 @@
-import type { FlyerContent } from "@/schemas/flyer";
-import type { FlyerFormat } from "@/schemas/format";
+import type { RenderRequestInput } from "@/schemas/render";
 
 export type RenderIssue = {
   code: string;
@@ -8,20 +7,7 @@ export type RenderIssue = {
   severity?: "warning" | "error";
 };
 
-export type RenderRequest = {
-  jobId: string;
-  templateId: string;
-  templateVersion: number;
-  format: FlyerFormat;
-  scale: 1 | 2;
-  content: FlyerContent;
-  assets: {
-    logoUrl?: string;
-    productImageUrls: string[];
-  };
-  themeId: string;
-  purpose: "preview" | "export";
-};
+export type RenderRequest = RenderRequestInput;
 
 export type RenderResult = {
   jobId: string;

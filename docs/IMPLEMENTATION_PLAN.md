@@ -45,21 +45,21 @@ Critical text (business name, price, old price, phone, address, logo) generated 
 
 Screens and features are ordered by how much of the product's core promise they carry. The core promise is: **pick a design, enter details, get a flyer with the correct price and phone number.**
 
-| Phase | Name | What you get | Priority |
-|---|---|---|---|
-| 0 | Bootstrap | Repo, tokens, shadcn, tooling | Foundation |
-| 1 | Shared foundations | Naira/phone helpers, schemas, Result types | Foundation |
-| 2 | Template system and renderer | A real flyer rendered from data, validated | **Most important** |
-| 3 | Data layer and auth | Schema, RLS, sign-in, free starter credits | **Most important** |
-| 4 | Core screens | Gallery → Editor → Export (vertical slice) | **Most important** |
-| 5 | Credits UI and payments | Buy credits, webhooks, billing | Must Have |
-| 6 | Onboarding, My flyers, Brand, Dashboard | Repeat use | Must/Should Have |
-| 7 | Landing, Pricing, legal | Public site | Must Have |
-| 8 | AI features | Copy suggestions, background removal | Should Have |
-| 9 | Formats, editing, duplicate, share | Completeness | Should Have |
-| 10 | Admin and analytics | Operations | Could/Must (events) |
-| 11 | Hardening and launch | Security, performance, deploy | Release |
-| 12 | Post-MVP | Mode B, natural-language edits | Could Have |
+| Phase | Name                                    | What you get                               | Priority            |
+| ----- | --------------------------------------- | ------------------------------------------ | ------------------- |
+| 0     | Bootstrap                               | Repo, tokens, shadcn, tooling              | Foundation          |
+| 1     | Shared foundations                      | Naira/phone helpers, schemas, Result types | Foundation          |
+| 2     | Template system and renderer            | A real flyer rendered from data, validated | **Most important**  |
+| 3     | Data layer and auth                     | Schema, RLS, sign-in, free starter credits | **Most important**  |
+| 4     | Core screens                            | Gallery → Editor → Export (vertical slice) | **Most important**  |
+| 5     | Credits UI and payments                 | Buy credits, webhooks, billing             | Must Have           |
+| 6     | Onboarding, My flyers, Brand, Dashboard | Repeat use                                 | Must/Should Have    |
+| 7     | Landing, Pricing, legal                 | Public site                                | Must Have           |
+| 8     | AI features                             | Copy suggestions, background removal       | Should Have         |
+| 9     | Formats, editing, duplicate, share      | Completeness                               | Should Have         |
+| 10    | Admin and analytics                     | Operations                                 | Could/Must (events) |
+| 11    | Hardening and launch                    | Security, performance, deploy              | Release             |
+| 12    | Post-MVP                                | Mode B, natural-language edits             | Could Have          |
 
 **Screen priority list (build in this order):**
 
@@ -86,17 +86,17 @@ Screens and features are ordered by how much of the product's core promise they 
 
 Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones marked **Ask**.
 
-| # | Issue | Recommendation | Status |
-|---|---|---|---|
-| D1 | **Navigation differs.** PRD: Home, Templates, My Flyers, Brand, Billing. Design system: Home, Templates, Create, My flyers, Account. | Follow the design system (it wins on UX). Brand and Billing live under Account on mobile; the desktop sidebar may list them directly. | **Ask** |
-| D2 | **Render engine** (README section 7): Chromium or SVG rasterizer. | Satori + resvg-js (flexbox-only layout, deterministic, light, cheap). Fits the "no CSS Grid" rule. Fall back to Chromium only if a template needs what Satori cannot do. | **Ask** |
-| D3 | **Payment gateway:** Paystack or Flutterwave. | Paystack, behind `PaymentProvider`. Replaceable later. | **Ask** |
-| D4 | **Phone OTP provider** undecided. | Ship Google and email magic link first. Add phone OTP when a provider is chosen (Phase 6). | **Ask** |
-| D5 | **Job queue** implementation. | Start with a database-backed job table plus direct worker call; keep the `RenderClient` interface so a managed queue can replace it. | **Ask** |
-| D6 | shadcn components generated with `grid` classes (Checkbox indicator, RadioGroup, FormItem, Alert) violate "no CSS Grid". | Rewrite those to Flexbox after generation. Add a CI grep check (Step 0.6). | Decided |
-| D7 | Flyer templates use fonts (for example Poppins) while the app UI is Inter only. | Allowed: the rule applies to the app interface, not to flyer artwork. Fonts must be commercially licensed (OFL is fine). | Confirm |
-| D8 | Starter free credits amount and credit pack prices. | Keep in one config file. These are **proposals to be validated**, never presented as final. | **Ask** |
-| D9 | Text in Satori renders as vector paths, so "read back text nodes" validation is not possible from the image. | Validate the laid-out text lines recorded by the fit engine (see Step 2.6). | Decided |
+| #   | Issue                                                                                                                                | Recommendation                                                                                                                                                           | Status  |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| D1  | **Navigation differs.** PRD: Home, Templates, My Flyers, Brand, Billing. Design system: Home, Templates, Create, My flyers, Account. | Follow the design system (it wins on UX). Brand and Billing live under Account on mobile; the desktop sidebar may list them directly.                                    | **Ask** |
+| D2  | **Render engine** (README section 7): Chromium or SVG rasterizer.                                                                    | Satori + resvg-js (flexbox-only layout, deterministic, light, cheap). Fits the "no CSS Grid" rule. Fall back to Chromium only if a template needs what Satori cannot do. | **Ask** |
+| D3  | **Payment gateway:** Paystack or Flutterwave.                                                                                        | Paystack, behind `PaymentProvider`. Replaceable later.                                                                                                                   | **Ask** |
+| D4  | **Phone OTP provider** undecided.                                                                                                    | Ship Google and email magic link first. Add phone OTP when a provider is chosen (Phase 6).                                                                               | **Ask** |
+| D5  | **Job queue** implementation.                                                                                                        | Start with a database-backed job table plus direct worker call; keep the `RenderClient` interface so a managed queue can replace it.                                     | **Ask** |
+| D6  | shadcn components generated with `grid` classes (Checkbox indicator, RadioGroup, FormItem, Alert) violate "no CSS Grid".             | Rewrite those to Flexbox after generation. Add a CI grep check (Step 0.6).                                                                                               | Decided |
+| D7  | Flyer templates use fonts (for example Poppins) while the app UI is Inter only.                                                      | Allowed: the rule applies to the app interface, not to flyer artwork. Fonts must be commercially licensed (OFL is fine).                                                 | Confirm |
+| D8  | Starter free credits amount and credit pack prices.                                                                                  | Keep in one config file. These are **proposals to be validated**, never presented as final.                                                                              | **Ask** |
+| D9  | Text in Satori renders as vector paths, so "read back text nodes" validation is not possible from the image.                         | Validate the laid-out text lines recorded by the fit engine (see Step 2.6).                                                                                              | Decided |
 
 ---
 
@@ -105,6 +105,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 0.1 Docs and decisions
 
 **Do**
+
 - Put `PRD.md`, `DESIGN_SYSTEM.md`, `TEMPLATE_SPEC.md` (stub), `AI_SPEC.md` (stub), `DECISIONS.md` in `docs/`. Put `README.md` at the root.
 - Create `CLAUDE.md` (short): "Read README.md first. Follow the `sharpflyer-product-engineering` and `design-quality-enforcement` skills. Follow `docs/IMPLEMENTATION_PLAN.md` in order."
 - Save this plan as `docs/IMPLEMENTATION_PLAN.md`.
@@ -115,6 +116,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 0.2 Scaffold the app
 
 **Do**
+
 - Create the Next.js app with pnpm: App Router, TypeScript `strict`, `src/` directory, Tailwind v4, ESLint.
 - Create the folder structure from README section 5 (empty folders may contain `.gitkeep`): `src/app/(public)`, `src/app/(app)/app`, `src/app/(admin)/admin`, `src/app/api`, `src/components/{ui,sharpflyer}`, `src/lib`, `src/schemas`, `src/server/{auth,flyers,templates,render,credits,billing,ai,storage,analytics}`, `src/types`, `templates/`, `render-worker/`, `tests/{unit,integration,e2e,visual}`.
 - Set `<html lang="en-NG">`.
@@ -124,6 +126,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 0.3 Tooling and scripts
 
 **Do**
+
 - Add Vitest (unit and integration) and Playwright (e2e and visual).
 - Add scripts: `lint`, `typecheck`, `test`, `test:e2e`, `test:visual`, `templates:validate`, `templates:sync`.
 - Add a GitHub Actions workflow: lint → typecheck → unit/integration → template validation → build. (E2E added in Phase 11.)
@@ -134,6 +137,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 0.4 Environment validation
 
 **Do**
+
 - Create `src/lib/env.ts` with Zod: separate `serverEnv` and `clientEnv` objects; only `NEXT_PUBLIC_*` in `clientEnv`.
 - Create `.env.example` with the variables listed in README section 15.
 - Throw a clear startup error if a required variable is missing (server only).
@@ -143,6 +147,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 0.5 Design tokens and theming
 
 **Do**
+
 - Implement `globals.css` exactly as in design system section 13.3 (tokens, `@theme inline`, shadows, motion, reduced-motion) and the text utilities from 13.4.
 - Font setup in `layout.tsx` per section 13.2: Inter variable, subsets `latin` and `latin-ext`, `display: swap`.
 - Verify `₦850,000` renders in Inter. If tabular figures or `₦` fall back, switch to `next/font/local` with the official Inter variable file (open item 3 in the design system).
@@ -153,6 +158,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 0.6 shadcn/ui setup and restyle
 
 **Do**
+
 1. Initialise shadcn with the `components.json` from design system 13.5.
 2. Install the components needed through Phase 6 first: `button`, `input`, `textarea`, `label`, `form`, `select`, `checkbox`, `radio-group`, `switch`, `tabs`, `toggle-group`, `dialog`, `sheet`, `drawer`, `popover`, `dropdown-menu`, `tooltip`, `sonner`, `badge`, `avatar`, `skeleton`, `progress`, `alert`, `separator`, `scroll-area`, `table`. Install the rest (`slider`, `command`, `pagination`, `breadcrumb`, `accordion`) when first needed.
 3. Restyle each to design system section 9: pill buttons (variants and sizes from 9.1), filled borderless inputs (48px, 12px radius), 28px dialogs, bottom sheets on mobile, flat overlays, shadows only on floating layers.
@@ -175,6 +181,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 1.1 Result and error types
 
 **Do**
+
 - `src/types/result.ts`: `Result<T, E>`, `ok()`, `err()`.
 - `src/lib/errors.ts`: `AppError { code, message }` with stable codes: `VALIDATION_FAILED`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `INSUFFICIENT_CREDITS`, `RENDER_FAILED`, `RENDER_VALIDATION_FAILED`, `UPLOAD_INVALID`, `AI_TIMEOUT`, `AI_INVALID_OUTPUT`, `AI_LIMIT_REACHED`, `AI_REFUSED`, `PAYMENT_FAILED`, `RATE_LIMITED`, `INTERNAL`.
 - A shared map from code to friendly user message (copy from design system 11.4 style: sentence case, specific, no apologies).
@@ -184,6 +191,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 1.2 Naira and phone helpers
 
 **Do**
+
 - `src/lib/money.ts`: `toKobo(naira)`, `formatNaira(kobo)` → `₦850,000` (no space, commas), `parsePriceInput(string)` (strips commas and spaces, rejects negatives, decimals, non-numbers).
 - `src/lib/phone.ts`: `normalizePhone(input)` accepts `0803 123 4567`, `+234 803 123 4567`, `2348031234567`; returns E.164; `formatPhoneDisplay(e164)` → `0803 123 4567`; plausible international numbers produce a warning, not a rejection.
 - Money is always integer kobo. No floats.
@@ -193,6 +201,7 @@ Record each in `docs/DECISIONS.md` in Step 0.1. Ask the founder for the ones mar
 ### 1.3 Zod schemas
 
 **Do** (in `src/schemas`)
+
 - `TemplateSchema` exactly matching README section 8: `meta` (id, version, title, category, tags, style, license), `formats`, `palettes`, `fields`, `regions` per format, `decor`, `constraints`.
 - `FlyerContentSchema`: headline, body/offer, price, oldPrice (must be greater than price), phone, businessName, address (optional), logoAssetId, productImageAssetIds, themeId, format.
 - `RenderRequest` / `RenderResult` types per README section 7 in `src/types/render.ts`.
@@ -220,6 +229,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 ### 2.2 Template loader and validator
 
 **Do**
+
 - `src/server/templates/load.ts`: read `templates/<id>/template.json`, validate with `TemplateSchema`, return typed `Result`.
 - `pnpm templates:validate`: validates every template, checks every field has a region in every declared format, fonts exist in `assets/`, and license info is present.
 - Enforce immutability: a published `id@version` hash is recorded; changing the file without bumping `version` fails validation.
@@ -229,6 +239,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 ### 2.3 Author the first templates
 
 **Do**
+
 - Create 3 original solar/inverter templates (`solar-bold-001`, `solar-clean-002`, `solar-dark-003`) with `ig_post` and `status` formats first. Other formats are added in Phase 9.
 - Each has at least 2 palettes, regions for headline, body, price, oldPrice, phone, businessName, productImage, logo, and constraints.
 - Use only original shapes or assets with a license note. Use OFL fonts (for example Inter and Poppins) and record the source.
@@ -240,6 +251,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 ### 2.4 Text-fit engine (deterministic)
 
 **Do** in `render-worker/src/engine/fit.ts`
+
 - Measure text with real font metrics (use a font-parsing library, see Appendix A; Satori itself has no measuring API).
 - Algorithm: wrap to region width → if lines exceed `maxHeadlineLines` or height, reduce size step by step down to `minSize`.
 - Optional fields may truncate with an ellipsis. **Required and critical fields never truncate**: if they cannot fit at `minSize`, return a warning or error.
@@ -251,6 +263,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 ### 2.5 Render pipeline
 
 **Do** in `render-worker/src/engine/`
+
 1. Load the template and pin its version.
 2. Resolve the palette (template palette or brand colors) into role tokens.
 3. Build the layout tree from `regions` for the requested format.
@@ -258,6 +271,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 5. Place images with `contain`, `cover`, or `smart-crop`; never stretch; keep transparency; apply shadow and mask options.
 6. Build the Satori element tree (flexbox positioning), render SVG, rasterize with resvg-js to PNG; produce JPG from PNG; support `scale` 1 or 2.
 7. Return `{ ok, outputBuffer, warnings, errors, metrics }`.
+
 - Critical text comes **only** from structured content. No AI or image model in this package.
 
 **Done when:** a CLI command `pnpm --filter render-worker render --template solar-bold-001 --fixture normal --format ig_post` writes a PNG you have opened and checked by eye.
@@ -265,6 +279,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 ### 2.6 Output validator (release gate)
 
 **Do** in `render-worker/src/validate/`
+
 - **Critical-text equality:** for each critical field, join the laid-out lines recorded by the fit engine and compare with the formatted input string (`formatNaira`, `formatPhoneDisplay`). Any difference, including a dropped digit or changed character, is an error and blocks export. Do not normalize in a way that could hide a difference.
 - Required regions populated.
 - No overflow beyond region or safe area.
@@ -277,6 +292,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 ### 2.7 Worker service and client
 
 **Do**
+
 - `render-worker/src/server.ts`: `POST /render` (shared-secret header), `GET /health`; accepts the `RenderRequest` shape; fetches assets from signed URLs; returns the `RenderResult` and writes the file to storage via a signed upload URL provided in the request (or returns bytes to the server, which stores them; choose the simpler one and record it in `DECISIONS.md`).
 - `src/server/render/client.ts`: `RenderClient` interface with an HTTP implementation. In local dev, the worker runs as a second process.
 - `render-worker/Dockerfile`.
@@ -301,6 +317,7 @@ This phase is the heart of the product. Build it before any screen that depends 
 Present the migration plan, then implement. Additive migrations only.
 
 **Tables** (`supabase/migrations`, `snake_case`, `timestamptz` UTC, constraints and indexes on foreign keys):
+
 - `profiles` (user id, business name default, onboarding state, theme preference)
 - `brand_profiles` (one per user: logo asset, colors, phone E.164, business name, address)
 - `templates` (id, version, title, category, tags, style, formats, status, license metadata; definition loaded from repo files)
@@ -315,6 +332,7 @@ Present the migration plan, then implement. Additive migrations only.
 ### 3.2 Credit ledger **[GATE]**
 
 **Do**
+
 - `credit_ledger` (user_id, integer `delta`, `reason` enum: grant, purchase, export, refund, adjustment, `reference_id`, created_at). RLS: select own only; no insert/update/delete policies for users.
 - Database functions (security definer, server-callable only): `consume_credit(user, flyer_version)` (advisory lock per user, compute balance as sum of delta, raise `insufficient_credits` if below 1, insert row, return new balance), `refund_credit(user, reference)`, `grant_credits(user, amount, reason, reference)`. All idempotent on `(reason, reference_id)`.
 - `src/server/credits`: `getBalance`, `consumeCredit`, `refundCredit`, `grantCredits` returning typed `Result`.
@@ -325,6 +343,7 @@ Present the migration plan, then implement. Additive migrations only.
 ### 3.3 Authentication
 
 **Do**
+
 - Supabase Auth with `@supabase/ssr`. Start with **Google and email magic link** (D4).
 - `src/server/auth`: `requireUser()`, `requireAdmin()` (admin flag stored server-side, not user-editable).
 - Middleware protects `/app/*` and `/admin/*`.
@@ -338,6 +357,7 @@ Present the migration plan, then implement. Additive migrations only.
 ### 3.4 Storage and upload pipeline
 
 **Do**
+
 - Private buckets `uploads` and `renders`. Short-lived signed URLs.
 - Upload flow: client requests an upload URL (server validates declared type and size) → client uploads → server verifies magic bytes, real dimensions, size → creates the `assets` row with hash and metadata.
 - Limits: logo 5 MB, product image 10 MB. Allowed: PNG, JPG, WebP; SVG only for logos after sanitization.
@@ -359,6 +379,7 @@ Follow the design system for every screen. Every screen: mobile first at 360px, 
 ### 4.1 App shell
 
 **Do**
+
 - `(app)/app/layout.tsx`: requires the user.
 - Mobile: top app bar (56px: logo or back, page title, credit badge) and bottom tab bar (64px plus safe area; Home, Templates, Create, My flyers, Account), per D1.
 - Desktop (`lg`+): 248px left sidebar with logo, nav, credit summary, "Buy credits".
@@ -371,6 +392,7 @@ Follow the design system for every screen. Every screen: mobile first at 360px, 
 ### 4.2 Template gallery (`/app/templates`)
 
 **Do**
+
 - Page title, search field, horizontally scrollable category chips (segmented style) only if filters help. Preselect the user's business type if known.
 - Template tiles per design system 10.1: image at true aspect ratio, 20px radius, title and category below, no card, no border, no shadow at rest; desktop hover adds `shadow-2` to the image.
 - Layout with flex-wrap: 2 columns on mobile, 3 at `md`, 4 at `lg`; gaps 16 and 24.
@@ -386,26 +408,32 @@ Follow the design system for every screen. Every screen: mobile first at 360px, 
 Build in these sub-steps. Layout: desktop = preview stage fills the flexible area with a 420px form panel on the right; mobile = collapsible preview on top, form sections below, sticky bottom bar with the primary action.
 
 **4.3.1 Form state and draft auto-save**
+
 - `react-hook-form` + Zod (`FlyerContentSchema`). Validate on blur, then on change after the first error. Preserve data on error.
 - Debounced `saveDraft` server action (validated, ownership-checked). Local copy in `localStorage` for offline recovery. Indicator shows "Saving…" or "Saved". Banner when offline: "You're offline. Your draft is saved on this phone."
 
 **4.3.2 Content section**
+
 - Headline (with character counter from the template's `maxLength`), offer/body, business name.
 - **Price field** (design system 10.5): fixed `₦` prefix, `inputmode="numeric"`, thousands separators as you type, helper "Shows as ₦850,000". Old price optional; error "Old price must be higher than the new price."
 - **Phone field** (10.6): `+234` prefix pill, `inputmode="tel"`, accepts `0803…`, `+234…`, `234…`; normalizes silently; helper "This number appears on your flyer exactly as shown here." Never wraps.
 - Labels above fields; "(optional)" marked in muted text; inline errors with icon and text.
 
 **4.3.3 Images section**
+
 - Upload dropzone (10.7) for logo and product image with progress, cancel, replace, remove, and specific errors. On mobile it opens the system file or camera chooser.
 - Uses the upload pipeline from 3.4.
 
 **4.3.4 Style section**
+
 - Color theme swatches (10.8) from the template's palettes; contrast warning icon on failing combinations.
 
 **4.3.5 Format section**
+
 - Format switcher (10.3): Status, Post, Story, Facebook, A4 as available for the template; shows pixel size under the selected item. Switching keeps all content and cross-fades the preview.
 
 **4.3.6 Preview stage and generate flow**
+
 - Stage per 10.2: `surface`, 28px radius, flyer at true proportions with `shadow-2`, optional zoom controls.
 - "Generate flyer" server action: validate content → request render (preview purpose, lower resolution) via `RenderClient` → show **generation progress** (10.10) reflecting real job states ("Preparing your design", "Placing your details", "Checking your flyer") → show preview. Keep the previous render visible and cross-fade while updating.
 - Failure: danger-tint alert with the reason, "Try again", and the statement that no credit was used.
@@ -413,6 +441,7 @@ Build in these sub-steps. Layout: desktop = preview stage fills the flexible are
 - Preview must match what will be exported: same template version, same content, same engine.
 
 **Tests**
+
 - Unit: form schemas, price and phone behavior.
 - E2E (Playwright, 360px viewport): open a template → fill the form → generate → see preview → refresh the page and find the draft intact.
 - Visual check of the screen in light and dark.
@@ -420,6 +449,7 @@ Build in these sub-steps. Layout: desktop = preview stage fills the flexible are
 ### 4.4 Export (modal on the editor)
 
 **Do**
+
 - Bottom sheet on mobile, dialog on desktop (design system 10.12): format summary row, file type segmented control (PNG, JPG), resolution toggle (Standard, High for print), row "This export uses 1 credit" with the balance after, one `brand` "Export flyer" button (full width on mobile).
 - Server action `exportFlyer(flyerId, version)`:
   1. `requireUser()`, verify ownership and verified account.
@@ -458,6 +488,7 @@ Report the M1 completion report to the founder before continuing.
 ### 5.3 Payments **[GATE]**
 
 **Do**
+
 - `PaymentProvider` interface; Paystack implementation (D3) in `src/server/billing`.
 - `payments` and `subscriptions` tables and a `webhook_events` table (event id unique) with RLS; users can read their own payments only.
 - Start checkout: server creates a `payments` row as `pending` and a provider checkout session. The client only receives the checkout URL.
@@ -509,6 +540,7 @@ These pages carry no logic but must be honest. They may be built in parallel wit
 ### 7.1 Landing page (`/`)
 
 **Do** (design system 11.2)
+
 - Order: hero (`display-xl` once, one-line value statement, `brand` `xl` "Get started", live before-and-after of a real template filled in) → how it works in three real steps → template preview strip → the accuracy promise with a real example → pricing summary → FAQ → final call to action → footer with legal links.
 - Use real flyers produced by the renderer. No fake logos, testimonials, or statistics.
 - One optional orchestrated moment (hero flyer assembling once), skippable, never delaying content.
@@ -534,6 +566,7 @@ These pages carry no logic but must be honest. They may be built in parallel wit
 ### 8.1 AI service layer skeleton
 
 **Do**
+
 - `src/server/ai` per README section 9: `index.ts`, `providers/`, `prompts/`, `schemas.ts`, `limits.ts`, `cost.ts`, `fallbacks.ts`.
 - `LLMProvider`, `ImageProvider`, `BackgroundRemovalProvider` interfaces. Callers never import provider SDKs.
 - `ai_requests` table (provider, model, usage, cost, latency, status) with RLS (**[GATE]** if it touches billing).
@@ -542,6 +575,7 @@ These pages carry no logic but must be honest. They may be built in parallel wit
 ### 8.2 `suggestCopy` (headline, offer wording, call to action)
 
 **Do**
+
 - Versioned prompt `prompts/copy.v1.ts`. The prompt gets business type, offer facts, tone, and the template's character limits. It never receives or returns phone, address, business name, or prices to rewrite.
 - Zod `CopySuggestionsSchema`; retry once on invalid output; then a typed error.
 - Post-filter: remove invented claims (warranty, discounts, specs not supplied by the user), enforce length, strip contact details.
@@ -598,7 +632,7 @@ These pages carry no logic but must be honest. They may be built in parallel wit
 
 **Do:** `/admin` guarded by `requireAdmin()`: template management view, users, usage and AI cost. Admin actions write to `audit_logs`. Not reachable by obscure URL alone.
 
----
+---pp
 
 ## Phase 11: Hardening and launch
 
@@ -644,28 +678,28 @@ Critical-text mismatch · cross-account data exposure · credit or payment error
 
 For each, state purpose, license, maintenance status, size, and alternatives when requesting approval.
 
-| Purpose | Candidate |
-|---|---|
-| Framework, styling | next, react, tailwindcss v4, tw-animate-css |
-| UI primitives and icons | shadcn/ui (Radix), lucide-react, class-variance-authority, clsx, tailwind-merge, sonner, vaul (drawer) |
-| Theme | next-themes (or a small inline script) |
-| Forms and validation | react-hook-form, @hookform/resolvers, zod |
-| Backend | @supabase/supabase-js, @supabase/ssr |
-| Rendering | satori, @resvg/resvg-js, a font-metrics library (fontkit or opentype.js), sharp (JPG, image validation) |
-| Upload validation | file-type (magic bytes), an SVG sanitizer |
-| Testing | vitest, @playwright/test |
-| Payments | Paystack server SDK or plain `fetch` (prefer plain `fetch` behind the interface) |
+| Purpose                 | Candidate                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| Framework, styling      | next, react, tailwindcss v4, tw-animate-css                                                             |
+| UI primitives and icons | shadcn/ui (Radix), lucide-react, class-variance-authority, clsx, tailwind-merge, sonner, vaul (drawer)  |
+| Theme                   | next-themes (or a small inline script)                                                                  |
+| Forms and validation    | react-hook-form, @hookform/resolvers, zod                                                               |
+| Backend                 | @supabase/supabase-js, @supabase/ssr                                                                    |
+| Rendering               | satori, @resvg/resvg-js, a font-metrics library (fontkit or opentype.js), sharp (JPG, image validation) |
+| Upload validation       | file-type (magic bytes), an SVG sanitizer                                                               |
+| Testing                 | vitest, @playwright/test                                                                                |
+| Payments                | Paystack server SDK or plain `fetch` (prefer plain `fetch` behind the interface)                        |
 
 ## Appendix B: Standard test fixtures
 
 Use the same content fixtures everywhere (renderer, visual tests, e2e):
 
-| Fixture | Headline | Price | Business name |
-|---|---|---|---|
-| short | "Solar sale" | ₦5,000 | "Sun Co" |
-| normal | "5kVA inverter and battery package" | ₦850,000 | "BrightPower Solutions" |
-| long | A headline near the template's `maxLength` | ₦2,450,000 | A 40-character name |
-| extreme | A headline at `maxLength` with unbroken long words | ₦12,500,000 | A 60-character name |
+| Fixture | Headline                                           | Price       | Business name           |
+| ------- | -------------------------------------------------- | ----------- | ----------------------- |
+| short   | "Solar sale"                                       | ₦5,000      | "Sun Co"                |
+| normal  | "5kVA inverter and battery package"                | ₦850,000    | "BrightPower Solutions" |
+| long    | A headline near the template's `maxLength`         | ₦2,450,000  | A 40-character name     |
+| extreme | A headline at `maxLength` with unbroken long words | ₦12,500,000 | A 60-character name     |
 
 Also vary: missing optional fields, transparent logo, small product image, wide product image, old price present.
 

@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "id": "solar-dark-003",
+    "version": 1,
+    "title": "Solar Backup: Dark",
+    "category": "solar",
+    "tags": ["backup", "inverter", "dark"],
+    "style": "dark",
+    "license": {
+      "author": "SharpFlyer AI",
+      "type": "original geometric artwork; OFL-1.1 fonts",
+      "fonts": ["Inter", "Noto Sans"],
+      "source": "https://github.com/rsms/inter/blob/master/LICENSE.txt"
+    }
+  },
+  "formats": {
+    "ig_post": { "width": 1080, "height": 1080, "safeArea": 48 },
+    "status": { "width": 1080, "height": 1920, "safeArea": 64 }
+  },
+  "palettes": [
+    { "id": "charcoal-orange", "roles": { "bg": "#151515", "primary": "#FF9F1C", "text": "#FFFFFF", "muted": "#C3C3C3", "accent": "#2A2114" } },
+    { "id": "charcoal-lime", "roles": { "bg": "#101612", "primary": "#B8E34B", "text": "#F7FFF0", "muted": "#B9C5B0", "accent": "#20301D" } }
+  ],
+  "fields": [
+    { "key": "headline", "type": "text", "required": true, "maxLength": 60 },
+    { "key": "body", "type": "text", "required": false, "maxLength": 100 },
+    { "key": "price", "type": "price", "required": false },
+    { "key": "oldPrice", "type": "price", "required": false },
+    { "key": "phone", "type": "phone", "required": true },
+    { "key": "businessName", "type": "text", "required": true, "maxLength": 48 },
+    { "key": "address", "type": "text", "required": false, "maxLength": 80 },
+    { "key": "productImage", "type": "image", "required": false },
+    { "key": "logo", "type": "logo", "required": false }
+  ],
+  "regions": {
+    "ig_post": {
+      "headline": { "x": 60, "y": 120, "w": 650, "h": 230, "font": "Inter", "weight": 700, "minSize": 42, "maxSize": 86, "lineHeight": 1.05, "overflow": "shrink", "color": "text" },
+      "body": { "x": 60, "y": 380, "w": 580, "h": 100, "font": "Inter", "weight": 400, "minSize": 22, "maxSize": 30, "lineHeight": 1.2, "overflow": "truncate", "color": "muted" },
+      "price": { "x": 60, "y": 770, "w": 580, "h": 120, "font": "Noto Sans", "weight": 700, "minSize": 44, "maxSize": 78, "lineHeight": 1.05, "overflow": "shrink", "color": "primary", "format": "currency" },
+      "oldPrice": { "x": 60, "y": 720, "w": 430, "h": 46, "font": "Noto Sans", "weight": 400, "minSize": 20, "maxSize": 28, "lineHeight": 1.1, "overflow": "truncate", "color": "muted", "format": "currency" },
+      "phone": { "x": 60, "y": 950, "w": 580, "h": 48, "font": "Inter", "weight": 600, "minSize": 24, "maxSize": 34, "lineHeight": 1.1, "overflow": "fail", "color": "text" },
+      "businessName": { "x": 60, "y": 56, "w": 480, "h": 48, "font": "Inter", "weight": 600, "minSize": 20, "maxSize": 28, "lineHeight": 1.1, "overflow": "fail", "color": "text" },
+      "address": { "x": 60, "y": 986, "w": 580, "h": 36, "font": "Inter", "weight": 400, "minSize": 18, "maxSize": 24, "lineHeight": 1.1, "overflow": "truncate", "color": "muted" },
+      "productImage": { "x": 650, "y": 270, "w": 360, "h": 520, "fit": "contain", "shadow": true },
+      "logo": { "x": 850, "y": 56, "w": 160, "h": 56, "fit": "contain" }
+    },
+    "status": {
+      "headline": { "x": 64, "y": 170, "w": 760, "h": 320, "font": "Inter", "weight": 700, "minSize": 48, "maxSize": 98, "lineHeight": 1.05, "overflow": "shrink", "color": "text" },
+      "body": { "x": 64, "y": 520, "w": 700, "h": 130, "font": "Inter", "weight": 400, "minSize": 24, "maxSize": 34, "lineHeight": 1.2, "overflow": "truncate", "color": "muted" },
+      "price": { "x": 64, "y": 1400, "w": 700, "h": 152, "font": "Noto Sans", "weight": 700, "minSize": 54, "maxSize": 98, "lineHeight": 1.05, "overflow": "shrink", "color": "primary", "format": "currency" },
+      "oldPrice": { "x": 64, "y": 1340, "w": 520, "h": 54, "font": "Noto Sans", "weight": 400, "minSize": 22, "maxSize": 32, "lineHeight": 1.1, "overflow": "truncate", "color": "muted", "format": "currency" },
+      "phone": { "x": 64, "y": 1680, "w": 700, "h": 60, "font": "Inter", "weight": 600, "minSize": 28, "maxSize": 40, "lineHeight": 1.1, "overflow": "fail", "color": "text" },
+      "businessName": { "x": 64, "y": 90, "w": 600, "h": 64, "font": "Inter", "weight": 600, "minSize": 22, "maxSize": 34, "lineHeight": 1.1, "overflow": "fail", "color": "text" },
+      "address": { "x": 64, "y": 1750, "w": 700, "h": 44, "font": "Inter", "weight": 400, "minSize": 20, "maxSize": 28, "lineHeight": 1.1, "overflow": "truncate", "color": "muted" },
+      "productImage": { "x": 580, "y": 660, "w": 430, "h": 620, "fit": "contain", "shadow": true },
+      "logo": { "x": 832, "y": 90, "w": 180, "h": 64, "fit": "contain" }
+    }
+  },
+  "decor": [
+    { "type": "shape", "kind": "rect", "x": 0, "y": 0, "w": 1080, "h": 1080, "fill": "bg" },
+    { "type": "shape", "kind": "circle", "x": 690, "y": 100, "w": 330, "h": 330, "fill": "accent" },
+    { "type": "shape", "kind": "line", "x": 60, "y": 640, "w": 930, "h": 4, "stroke": "primary" }
+  ],
+  "constraints": { "minContrast": 4.5, "maxHeadlineLines": 3 }
+}

@@ -12,7 +12,8 @@ const FormatDefinitionSchema = z.object({
 const LicenseSchema = z.object({
   author: z.string().min(1),
   type: z.string().min(1),
-  fonts: z.array(z.string().min(1)),
+  fonts: z.array(z.string().min(1)).min(1),
+  source: z.string().url().optional(),
 });
 
 const TemplateFieldSchema = z.object({
@@ -62,7 +63,7 @@ const validateFormatKeys = (value: Record<string, unknown>, context: z.Refinemen
   }
 };
 
-export const TemplateSchema = z.object({
+const TemplateBaseSchema = z.object({
   meta: z.object({
     id: z.string().min(1),
     version: z.number().int().positive(),
@@ -72,7 +73,7 @@ export const TemplateSchema = z.object({
     style: z.string().min(1),
     license: LicenseSchema,
   }),
-  formats: z.record(z.string(), FormatDefinitionSchema).superRefine(validateFormatKeys),
+  formats: z.record(z.string(), FormatDefinitionSchema).refine((value) => Object.keys(value).length > 0, "At least one format is required.").superRefine(validateFormatKeys),
   palettes: z.array(z.object({
     id: z.string().min(1),
     roles: z.record(z.string(), HexColorSchema),
@@ -84,6 +85,15 @@ export const TemplateSchema = z.object({
     minContrast: z.number().positive(),
     maxHeadlineLines: z.number().int().positive(),
   }),
+});
+
+export const TemplateSchema = TemplateBaseSchema.superRefine((template, context) => {
+  const fieldKeys = template.fields.map((field) => field.key);
+  const uniqueFieldKeys = new Set(fieldKeys);
+
+  if (uniqueFieldKeys.size !== fieldKeys.length) {
+    context.addIssue({ code: "custom", path: ["fields"], message: "Field keys must be unique." });
+  }
 });
 
 export type Template = z.infer<typeof TemplateSchema>;

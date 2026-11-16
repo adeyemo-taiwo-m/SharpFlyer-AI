@@ -5,7 +5,7 @@ Decisions marked **Ask** require founder confirmation before the affected implem
 | ID | Issue | Recommendation | Status |
 |---|---|---|---|
 | D1 | Navigation differs between the PRD and design system. | Follow the design system: Home, Templates, Create, My flyers, Account. Brand and Billing live under Account on mobile; desktop may list them directly. | Ask |
-| D2 | Render engine: headless Chromium or SVG rasterizer. | Use Satori + resvg-js behind the `RenderClient` interface; fall back to Chromium only if required by a template. | Ask |
+| D2 | Render engine: headless Chromium or SVG rasterizer. | Use Satori + resvg-js behind the `RenderClient` interface; fall back to Chromium only if required by a template. The worker returns validated PNG/JPG bytes to the app; storage remains an app concern. | Decided |
 | D3 | Payment gateway: Paystack or Flutterwave. | Use Paystack behind a replaceable `PaymentProvider` interface. | Ask |
 | D4 | Phone OTP provider is undecided. | Start with Google and email magic link; add phone OTP after a provider is chosen. | Ask |
 | D5 | Job queue implementation is undecided. | Start with a database-backed job table plus a direct worker call behind a replaceable interface. | Ask |

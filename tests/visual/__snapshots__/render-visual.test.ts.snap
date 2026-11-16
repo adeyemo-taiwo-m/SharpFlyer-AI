@@ -1,0 +1,269 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders solar-bold-001 / ig_post / extreme 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 21,
+  "sha256": "6f8225b0a178ac6eda1d7ea8fdb872cb7eb8abf5ce31f96d261bf915a96b05db",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / ig_post / long 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 22,
+  "sha256": "41f40c6e74a237ebca2aa6f836640de91ad9174eff8e7679ef76fa8af2acc1d3",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / ig_post / normal 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 24,
+  "sha256": "ac0d4abdb0e4a53f9487f3d6f54a17cf18d3544cbbef64fe3d55c8adf9fafc38",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / ig_post / short 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 28,
+  "sha256": "110a45135c12e1728478fbdb3c661aaf1f996c7bb513b03d5a9c4106ee7d6dcb",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / status / extreme 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "6894b91143168dc06b312df46b398cdf30e7c127fef51f8fe03cc7f9b4d74334",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / status / long 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 27,
+  "sha256": "0751ed2f90780543e17b718a695da8f8783fd50c400b174ec9d1b4c3c92ca0fd",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / status / normal 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "e9da211bc978e838e99c4fd178f80c0acd518ed9e13dabf6cea5728a5f30df18",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / status / short 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "5b26f3a22e041c812b4777542c1d6168af4e3922af07d75b9c253b442570c553",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / ig_post / extreme 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 21,
+  "sha256": "5b0e9ba68374f2b2cb7f8bc9209c66efad194d38bc1e7d8caffad4228381c57a",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / ig_post / long 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 22,
+  "sha256": "70c77762a20813a94f770c04ecbe2737b01c1fbfb28944ad7688cf47635579ca",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / ig_post / normal 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 23,
+  "sha256": "2e025f08db8321aa017ae192f108611b0bbd18fa7e6341b2d02ca10e1d72bf07",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / ig_post / short 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 28,
+  "sha256": "4db61a0ebaa30dda327760b12addce24a8527f6d846d4160f0c0d01d15f3c46c",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / status / extreme 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "385fc0f41b3bace0304b1eb9c298dbb37fbcd9d3f9b4feadcd606599f806c0d7",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / status / long 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 27,
+  "sha256": "0f7ffad71acceacdee2a6d87d04b91b06600005c939c0e7d1e737103a56d0bd5",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / status / normal 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "367515148087b6957fb92057cccdebcc67d5090873615b4391dbb138d2d2aa9d",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / status / short 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "30304764c52cd8eb02a920d17b75c81e9e45f36068020b92f5268a8f4ca40476",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / ig_post / extreme 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 21,
+  "sha256": "cc6964b4627975b12e6ae019b98666665633c173efcdd1466cd19023bf250519",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / ig_post / long 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 23,
+  "sha256": "c24099a33797ca906a1aa664a99b402333374e43bcb16343eed43477353a5e13",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / ig_post / normal 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 24,
+  "sha256": "2b6de8020dcf2002be6b5a789cc43902427dc1e31f910ec169b5c7238127a593",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / ig_post / short 1`] = `
+{
+  "height": 1080,
+  "minFontSizeUsed": 28,
+  "sha256": "b72c9f935384670bfdc0a00ad2ad669fb86f61ba96e59ec19b53e04344d62bcd",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / status / extreme 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "993424a1189dd1ffda6cc49c3a915dac950d8ac76cda8a5edb724d25757a2d10",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / status / long 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "c30474d2e5230db57bb1841defe064a3dd2de1865245b92b21d5144039a40411",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / status / normal 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "15a156c655e855b43f4a2b2bd451f5d00aed4253cd953042e4f399e827e1c771",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / status / short 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "ffe1591b32b7340334cb4cbb8df4e1367170b5161da63587ce05274aed7c5549",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
