@@ -33,10 +33,35 @@ import { Toaster } from "@/components/ui/sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type DemoForm = { headline: string };
+type ThemeChoice = "light" | "dark" | "system";
+
+function applyThemeChoice(theme: ThemeChoice) {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDark = theme === "dark" || (theme === "system" && prefersDark);
+  document.documentElement.classList.toggle("dark", isDark);
+  document.documentElement.dataset.theme = theme;
+  if (theme === "system") {
+    localStorage.removeItem("sharpflyer-theme");
+  } else {
+    localStorage.setItem("sharpflyer-theme", theme);
+  }
+}
 
 export default function UiGallery() {
   const form = useForm<DemoForm>({ defaultValues: { headline: "Solar sale" } });
   const [loading, setLoading] = React.useState(false);
+  const [theme, setTheme] = React.useState<ThemeChoice>(() => {
+    if (typeof window === "undefined") return "system";
+    const saved = window.localStorage.getItem("sharpflyer-theme");
+    return saved === "light" || saved === "dark" ? saved : "system";
+  });
+
+  function handleThemeChange(value: string) {
+    if (value === "light" || value === "dark" || value === "system") {
+      setTheme(value);
+      applyThemeChoice(value);
+    }
+  }
 
   function showLoading() {
     setLoading(true);
@@ -48,50 +73,273 @@ export default function UiGallery() {
       <main className="min-h-dvh bg-surface p-4 text-foreground sm:p-8">
         <Toaster />
         <div className="mx-auto max-w-5xl">
-          <p className="text-callout text-brand-text">SharpFlyer development tools</p>
-          <h1 className="mt-3 text-h1">Component states</h1>
-          <p className="mt-2 text-body-lg text-muted-foreground">Interactive reference for Phase 0 components.</p>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-callout text-brand-text">SharpFlyer development tools</p>
+              <h1 className="mt-2 text-h1">Component states</h1>
+              <p className="mt-2 text-body-lg text-muted-foreground">
+                Interactive reference for Phase 0 components in light and dark themes.
+              </p>
+            </div>
+            <ToggleGroup type="single" value={theme} onValueChange={handleThemeChange} aria-label="Application theme">
+              <ToggleGroupItem value="light">Light</ToggleGroupItem>
+              <ToggleGroupItem value="dark">Dark</ToggleGroupItem>
+              <ToggleGroupItem value="system">System</ToggleGroupItem>
+            </ToggleGroup>
+          </div>
 
           <section className="mt-8 flex flex-col gap-6 rounded-2xl bg-background p-5 shadow-2 sm:p-8">
             <h2 className="text-h2">Actions and status</h2>
             <div className="flex flex-wrap items-center gap-3">
-              <Button>Default action</Button><Button variant="brand">Brand action</Button><Button variant="secondary">Secondary</Button><Button variant="ghost">Ghost</Button><Button variant="outline">Outline</Button><Button variant="destructive">Delete flyer</Button><Button size="icon" aria-label="Add"><Plus /></Button><Button disabled>Disabled</Button><Button disabled={loading} onClick={showLoading}>{loading && <Loader2 className="animate-spin" />} {loading ? "Loading" : "Try loading"}</Button>
+              <Button>Default action</Button>
+              <Button variant="brand">Brand action</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="ghost">Ghost</Button>
+              <Button variant="outline">Outline</Button>
+              <Button variant="link">Inline link</Button>
+              <Button variant="destructive">Delete flyer</Button>
+              <Button size="sm">Small</Button>
+              <Button size="lg">Large</Button>
+              <Button size="xl">Extra large</Button>
+              <Button size="icon" aria-label="Add">
+                <Plus />
+              </Button>
+              <Button disabled>Disabled</Button>
+              <Button disabled={loading} aria-busy={loading} onClick={showLoading}>
+                {loading && <Loader2 className="animate-spin" />} {loading ? "Loading" : "Try loading"}
+              </Button>
             </div>
-            <div className="flex flex-wrap items-center gap-2"><Badge>Neutral</Badge><Badge variant="brand">Brand</Badge><Badge variant="success">Saved</Badge><Badge variant="warning">Low credits</Badge><Badge variant="danger">Error</Badge><Avatar className="size-10"><AvatarFallback>SF</AvatarFallback></Avatar><Skeleton className="h-10 w-32" /></div>
-            <div className="flex flex-wrap items-center gap-3"><Tooltip><TooltipTrigger asChild><Button variant="ghost" size="icon" aria-label="More"><MoreHorizontal /></Button></TooltipTrigger><TooltipContent>More actions</TooltipContent></Tooltip><Button variant="secondary" onClick={() => toast("Flyer exported")}>Show toast</Button><Progress value={62} className="max-w-xs" /></div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge>Neutral</Badge>
+              <Badge variant="brand">Brand</Badge>
+              <Badge variant="success">Saved</Badge>
+              <Badge variant="warning">Low credits</Badge>
+              <Badge variant="danger">Error</Badge>
+              <Avatar className="size-10">
+                <AvatarFallback>SF</AvatarFallback>
+              </Avatar>
+              <Skeleton className="h-10 w-32" />
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" aria-label="More">
+                    <MoreHorizontal />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>More actions</TooltipContent>
+              </Tooltip>
+              <Button variant="secondary" onClick={() => toast("Flyer exported")}>
+                Show toast
+              </Button>
+              <Progress value={62} className="max-w-xs" />
+            </div>
           </section>
 
           <section className="mt-6 rounded-2xl bg-background p-5 shadow-2 sm:p-8">
             <h2 className="text-h2">Forms and controls</h2>
-            <Form {...form}><form className="mt-6 flex max-w-xl flex-col gap-5" onSubmit={form.handleSubmit(() => toast("Details saved"))}>
-              <FormField control={form.control} name="headline" render={({ field }) => <FormItem><FormLabel>Headline</FormLabel><FormControl><Input {...field} /></FormControl><FormDescription>Shows on the flyer exactly as entered.</FormDescription><FormMessage /></FormItem>} />
-              <div className="flex flex-col gap-2"><Label htmlFor="body-copy">Offer copy (optional)</Label><Textarea id="body-copy" placeholder="Add a short offer" /></div>
-              <div className="flex flex-col gap-2"><Label htmlFor="error-input">Error state</Label><Input id="error-input" aria-invalid="true" className="ring-2 ring-danger-text" defaultValue="Needs attention" /><p className="text-small text-danger-text">Enter a valid value.</p></div>
-              <div className="flex flex-wrap items-center gap-6"><label className="flex min-h-11 items-center gap-3 text-callout"><Checkbox defaultChecked /> Use brand logo</label><label className="flex min-h-11 items-center gap-3 text-callout"><Switch defaultChecked /> Dark mode</label></div>
-              <RadioGroup defaultValue="status" aria-label="Format" className="flex-row"><label className="flex items-center gap-2"><RadioGroupItem value="status" /> Status</label><label className="flex items-center gap-2"><RadioGroupItem value="post" /> Post</label></RadioGroup>
-              <div className="flex flex-wrap gap-3"><Select defaultValue="solar"><SelectTrigger className="max-w-xs"><SelectValue placeholder="Choose a category" /></SelectTrigger><SelectContent><SelectItem value="solar">Solar</SelectItem><SelectItem value="retail">Retail</SelectItem></SelectContent></Select><ToggleGroup type="single" defaultValue="png" aria-label="File type"><ToggleGroupItem value="png">PNG</ToggleGroupItem><ToggleGroupItem value="jpg">JPG</ToggleGroupItem></ToggleGroup></div>
-              <Button type="submit">Save details</Button>
-            </form></Form>
+            <Form {...form}>
+              <form className="mt-6 flex max-w-xl flex-col gap-5" onSubmit={form.handleSubmit(() => toast("Details saved"))}>
+                <FormField
+                  control={form.control}
+                  name="headline"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Headline</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormDescription>Shows on the flyer exactly as entered.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="disabled-input">Disabled input</Label>
+                  <Input id="disabled-input" disabled defaultValue="Cannot edit" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="body-copy">
+                    Offer copy <span className="text-muted-foreground">(optional)</span>
+                  </Label>
+                  <Textarea id="body-copy" placeholder="Add a short offer" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="error-input">Error state</Label>
+                  <Input
+                    id="error-input"
+                    aria-invalid="true"
+                    className="ring-2 ring-danger-text"
+                    defaultValue="Needs attention"
+                  />
+                  <p className="flex items-center gap-1.5 text-small text-danger-text">
+                    <CircleAlert className="size-4 shrink-0" />
+                    Enter a valid phone number, like 0803 123 4567.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-6">
+                  <label className="flex min-h-11 items-center gap-3 text-callout">
+                    <Checkbox defaultChecked /> Use brand logo
+                  </label>
+                  <label className="flex min-h-11 items-center gap-3 text-callout">
+                    <Switch
+                      checked={theme === "dark"}
+                      onCheckedChange={(checked) => handleThemeChange(checked ? "dark" : "light")}
+                    />
+                    Dark mode
+                  </label>
+                </div>
+                <RadioGroup defaultValue="status" aria-label="Format" className="flex-row">
+                  <label className="flex min-h-11 items-center gap-2">
+                    <RadioGroupItem value="status" /> Status
+                  </label>
+                  <label className="flex min-h-11 items-center gap-2">
+                    <RadioGroupItem value="post" /> Post
+                  </label>
+                </RadioGroup>
+                <div className="flex flex-wrap gap-3">
+                  <Select defaultValue="solar">
+                    <SelectTrigger className="max-w-xs">
+                      <SelectValue placeholder="Choose a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="solar">Solar</SelectItem>
+                      <SelectItem value="retail">Retail</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <ToggleGroup type="single" defaultValue="png" aria-label="File type">
+                    <ToggleGroupItem value="png">PNG</ToggleGroupItem>
+                    <ToggleGroupItem value="jpg">JPG</ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+                <Button type="submit">Save details</Button>
+              </form>
+            </Form>
           </section>
 
           <section className="mt-6 rounded-2xl bg-background p-5 shadow-2 sm:p-8">
             <h2 className="text-h2">Navigation and overlays</h2>
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Tabs defaultValue="one"><TabsList><TabsTrigger value="one">One</TabsTrigger><TabsTrigger value="two">Two</TabsTrigger></TabsList><TabsContent value="one" className="text-small text-muted-foreground">Selected tab</TabsContent><TabsContent value="two">Second tab</TabsContent></Tabs>
-              <Dialog><DialogTrigger asChild><Button variant="secondary">Open dialog</Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>Export flyer</DialogTitle><DialogDescription>This export uses 1 credit.</DialogDescription></DialogHeader><DialogFooter><Button variant="secondary">Cancel</Button><Button variant="brand">Export flyer</Button></DialogFooter></DialogContent></Dialog>
-              <Sheet><SheetTrigger asChild><Button variant="secondary">Open sheet</Button></SheetTrigger><SheetContent side="bottom"><SheetHeader><SheetTitle>Mobile sheet</SheetTitle></SheetHeader><p className="text-small text-muted-foreground">Bottom sheets keep focused tasks close to the thumb.</p></SheetContent></Sheet>
-              <Drawer><DrawerTrigger asChild><Button variant="secondary">Open drawer</Button></DrawerTrigger><DrawerContent><DrawerHeader><DrawerTitle>Mobile drawer</DrawerTitle><DrawerDescription>Swipe down to dismiss.</DrawerDescription></DrawerHeader></DrawerContent></Drawer>
-              <Popover><PopoverTrigger asChild><Button variant="secondary">Open popover</Button></PopoverTrigger><PopoverContent>Popover content</PopoverContent></Popover>
-              <DropdownMenu><DropdownMenuTrigger asChild><Button variant="secondary">Menu</Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem><Upload className="mr-2 size-4" /> Upload image</DropdownMenuItem><DropdownMenuItem><Info className="mr-2 size-4" /> View details</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
+              <Tabs defaultValue="one">
+                <TabsList>
+                  <TabsTrigger value="one">One</TabsTrigger>
+                  <TabsTrigger value="two">Two</TabsTrigger>
+                </TabsList>
+                <TabsContent value="one" className="text-small text-muted-foreground">
+                  Selected tab
+                </TabsContent>
+                <TabsContent value="two">Second tab</TabsContent>
+              </Tabs>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="secondary">Open dialog</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Export flyer</DialogTitle>
+                    <DialogDescription>This export uses 1 credit.</DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="brand">Export flyer</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="secondary">Open sheet</Button>
+                </SheetTrigger>
+                <SheetContent side="bottom">
+                  <SheetHeader>
+                    <SheetTitle>Mobile sheet</SheetTitle>
+                  </SheetHeader>
+                  <p className="text-small text-muted-foreground">
+                    Bottom sheets keep focused tasks close to the thumb.
+                  </p>
+                </SheetContent>
+              </Sheet>
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <Button variant="secondary">Open drawer</Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle>Mobile drawer</DrawerTitle>
+                    <DrawerDescription>Swipe down to dismiss.</DrawerDescription>
+                  </DrawerHeader>
+                </DrawerContent>
+              </Drawer>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="secondary">Open popover</Button>
+                </PopoverTrigger>
+                <PopoverContent>Popover content</PopoverContent>
+              </Popover>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="secondary">Menu</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Upload className="mr-2 size-4" /> Upload image
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Info className="mr-2 size-4" /> View details
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </section>
 
           <section className="mt-6 rounded-2xl bg-background p-5 shadow-2 sm:p-8">
             <h2 className="text-h2">Content states</h2>
-            <div className="mt-6 flex flex-col gap-4"><Alert><Info className="size-5" /><AlertTitle>Information</AlertTitle><AlertDescription>Your draft is saved on this phone.</AlertDescription></Alert><Alert variant="warning"><CircleAlert className="size-5" /><AlertTitle>Layout warning</AlertTitle><AlertDescription>Your headline may be difficult to fit.</AlertDescription></Alert><Alert variant="success"><Check className="size-5" /><AlertTitle>Saved</AlertTitle><AlertDescription>Your details are ready.</AlertDescription></Alert></div>
+            <div className="mt-6 flex flex-col gap-4">
+              <Alert>
+                <Info className="size-5" />
+                <AlertTitle>Information</AlertTitle>
+                <AlertDescription>Your draft is saved on this phone.</AlertDescription>
+              </Alert>
+              <Alert variant="warning">
+                <CircleAlert className="size-5" />
+                <AlertTitle>Layout warning</AlertTitle>
+                <AlertDescription>Your headline may be difficult to fit.</AlertDescription>
+              </Alert>
+              <Alert variant="danger">
+                <CircleAlert className="size-5" />
+                <AlertTitle>Render failed</AlertTitle>
+                <AlertDescription>We couldn&apos;t create your flyer. No credit was used. Try again.</AlertDescription>
+              </Alert>
+              <Alert variant="success">
+                <Check className="size-5" />
+                <AlertTitle>Saved</AlertTitle>
+                <AlertDescription>Your details are ready.</AlertDescription>
+              </Alert>
+            </div>
             <Separator className="my-6" />
-            <ScrollArea className="h-24 rounded-xl bg-surface p-4"><p className="text-small">Scrollable content remains accessible and uses a quiet surface. This area stands in for long menus and list states.</p></ScrollArea>
-            <Table className="mt-6"><TableHeader><TableRow><TableHead>Flyer</TableHead><TableHead>Status</TableHead></TableRow></TableHeader><TableBody><TableRow><TableCell>Solar sale</TableCell><TableCell><Badge variant="success">Exported</Badge></TableCell></TableRow></TableBody></Table>
+            <ScrollArea className="h-24 rounded-xl bg-surface p-4">
+              <p className="text-small">
+                Scrollable content remains accessible and uses a quiet surface. This area stands in for long menus and
+                list states.
+              </p>
+            </ScrollArea>
+            <Table className="mt-6">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Flyer</TableHead>
+                  <TableHead className="text-right">Price</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Solar sale</TableCell>
+                  <TableCell className="text-right tabular">₦850,000</TableCell>
+                  <TableCell>
+                    <Badge variant="success">Exported</Badge>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </section>
         </div>
       </main>
