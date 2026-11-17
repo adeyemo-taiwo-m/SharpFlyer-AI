@@ -105,14 +105,16 @@ export function FlyerEditor({
         const parsed = FlyerContentSchema.safeParse(JSON.parse(stored));
         if (parsed.success) {
           reset(parsed.data);
-          queueMicrotask(() => setPreviewSignature(null));
+          if (contentSignature(parsed.data) !== contentSignature(flyer.content)) {
+            queueMicrotask(() => setPreviewSignature(null));
+          }
         }
       } catch {
         window.localStorage.removeItem(localStorageKey(flyer.id));
       }
     }
     hydrated.current = true;
-  }, [flyer.id, reset]);
+  }, [flyer.content, flyer.id, reset]);
 
   React.useEffect(() => {
     let timeout: number | undefined;

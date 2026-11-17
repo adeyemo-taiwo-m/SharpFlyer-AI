@@ -16,6 +16,14 @@ export function AuthSignInForm({ redirectTo }: { redirectTo: string }) {
   const [error, setError] = React.useState<string | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
 
+  React.useEffect(() => {
+    document.documentElement.dataset.authReady = "true";
+
+    return () => {
+      delete document.documentElement.dataset.authReady;
+    };
+  }, []);
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
