@@ -4,27 +4,38 @@ import { join, resolve } from "node:path";
 
 const templateRoot = resolve(process.cwd(), "templates");
 const entries = await readdir(templateRoot, { withFileTypes: true });
-const directories = entries.filter((entry) => entry.isDirectory()).sort((a, b) => a.name.localeCompare(b.name));
+const directories = entries.filter((entry) => entry.isDirectory() && !entry.name.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name));
+
+async function templateFiles(directory) {
+  const children = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  if (children.some((child) => child.isFile() && child.name === "template.json")) files.push(join(directory, "template.json"));
+  for (const child of children) {
+    if (child.isDirectory() && (/^v\d+$/.test(child.name) || /^\d+$/.test(child.name))) files.push(...await templateFiles(join(directory, child.name)));
+  }
+  return files;
+}
 
 const rows = [];
 for (const dir of directories) {
-  const filePath = join(templateRoot, dir.name, "template.json");
-  const raw = await readFile(filePath, "utf8");
-  const parsed = JSON.parse(raw);
-  const hash = createHash("sha256").update(raw, "utf8").digest("hex");
+  for (const filePath of await templateFiles(join(templateRoot, dir.name))) {
+    const raw = await readFile(filePath, "utf8");
+    const parsed = JSON.parse(raw);
+    const hash = createHash("sha256").update(raw, "utf8").digest("hex");
 
-  rows.push({
-    id: parsed.meta.id,
-    version: parsed.meta.version,
-    title: parsed.meta.title,
-    category: parsed.meta.category,
-    tags: parsed.meta.tags ?? [],
-    style: parsed.meta.style,
-    formats: Object.keys(parsed.formats ?? {}),
-    status: "published",
-    license: parsed.meta.license,
-    definition_hash: hash,
-  });
+    rows.push({
+      id: parsed.meta.id,
+      version: parsed.meta.version,
+      title: parsed.meta.title,
+      category: parsed.meta.category,
+      tags: parsed.meta.tags ?? [],
+      style: parsed.meta.style,
+      formats: Object.keys(parsed.formats ?? {}),
+      status: "published",
+      license: parsed.meta.license,
+      definition_hash: hash,
+    });
+  }
 }
 
 if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {

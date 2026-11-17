@@ -4,6 +4,10 @@ import { RenderRequestSchema } from "../../src/schemas/render";
 import type { RenderRequest } from "../../src/types/render";
 import { renderFlyer } from "./engine/render";
 
+function logWorkerEvent(event: string, details: Record<string, unknown> = {}): void {
+  console.log(JSON.stringify({ service: "render-worker", event, at: new Date().toISOString(), ...details }));
+}
+
 const port = Number(process.env.RENDER_WORKER_PORT ?? 4100);
 const secret = process.env.RENDER_WORKER_SECRET;
 
@@ -47,9 +51,11 @@ const server = createServer(async (request, response) => {
     }
 
     const result = await renderFlyer(parsed.data as RenderRequest, { output: parsed.data.fileType ?? "png" });
+    logWorkerEvent("render_completed", { jobId: parsed.data.jobId, correlationId: parsed.data.correlationId ?? null, templateId: parsed.data.templateId, format: parsed.data.format, durationMs: result.metrics.durationMs, result: result.ok ? "succeeded" : "failed" });
     const publicResult = { jobId: parsed.data.jobId, ok: result.ok, warnings: result.warnings, errors: result.errors, metrics: result.metrics };
     send(response, result.ok && result.outputBuffer ? 200 : 422, { ...publicResult, outputBase64: result.outputBuffer?.toString("base64") });
   } catch (error) {
+    logWorkerEvent("render_failed", { jobId: "unknown", error: error instanceof Error ? error.message.slice(0, 240) : "unknown" });
     send(response, 400, { ok: false, errors: [{ code: "INVALID_REQUEST", message: error instanceof Error ? error.message : "Request is invalid.", severity: "error" }], warnings: [], metrics: { durationMs: 0, minFontSizeUsed: 0 } });
   }
 });

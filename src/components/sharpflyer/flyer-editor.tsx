@@ -90,6 +90,7 @@ export function FlyerEditor({
   const [productUpload, setProductUpload] = React.useState<UploadState>(() => initialUploadState(flyer.content.productImageAssetIds[0], "Product image saved"));
   const uploadRequests = React.useRef(new Map<UploadKind, XMLHttpRequest>());
   const hydrated = React.useRef(false);
+  const correlationId = React.useRef(`ui-${typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : Date.now()}`);
 
   React.useEffect(() => {
     const onOnline = () => setOffline(false);
@@ -151,6 +152,7 @@ export function FlyerEditor({
   const phoneValue = watch("phone") ?? "";
   const themeId = watch("themeId");
   const format = watch("format");
+  const imagePosition = watch("imagePosition") ?? { x: 0, y: 0 };
   const hasCurrentPreview = Boolean(previewUrl && previewSignature === currentSignature);
   const blockingIssues = renderIssues.filter((issue) => issue.severity === "error");
 
@@ -158,7 +160,7 @@ export function FlyerEditor({
     setGenerating(true);
     setRenderIssues([]);
     setWarnings([]);
-    const result = await generateFlyerPreviewAction(flyer.id, values);
+    const result = await generateFlyerPreviewAction(flyer.id, values, correlationId.current);
     setGenerating(false);
     if (!result.ok) {
       setRenderIssues(result.error.issues ?? []);
@@ -447,6 +449,22 @@ export function FlyerEditor({
           <SectionHeading id="images-heading" title="Images" />
           <UploadDropzone kind="logo" state={logoUpload} onFile={(file) => void uploadFile("logo", file)} onCancel={() => cancelUpload("logo")} onRemove={() => removeUpload("logo")} />
           <UploadDropzone kind="product_image" state={productUpload} onFile={(file) => void uploadFile("product_image", file)} onCancel={() => cancelUpload("product_image")} onRemove={() => removeUpload("product_image")} />
+          {productUpload.status === "done" && (
+            <div className="flex flex-col gap-3 rounded-2xl bg-surface p-4" aria-labelledby="image-position-heading">
+              <div>
+                <h3 id="image-position-heading" className="text-callout text-foreground">Image position</h3>
+                <p className="mt-1 text-caption text-muted-foreground">Fine-tune the product image inside its template frame.</p>
+              </div>
+              <label className="flex flex-col gap-2 text-small text-foreground" htmlFor="image-position-x">
+                Horizontal <span className="text-caption text-muted-foreground">{imagePosition.x.toFixed(1)}</span>
+                <input id="image-position-x" type="range" min={-1} max={1} step={0.1} value={imagePosition.x} onChange={(event) => setValue("imagePosition", { ...imagePosition, x: Number(event.target.value) }, { shouldDirty: true, shouldValidate: true })} />
+              </label>
+              <label className="flex flex-col gap-2 text-small text-foreground" htmlFor="image-position-y">
+                Vertical <span className="text-caption text-muted-foreground">{imagePosition.y.toFixed(1)}</span>
+                <input id="image-position-y" type="range" min={-1} max={1} step={0.1} value={imagePosition.y} onChange={(event) => setValue("imagePosition", { ...imagePosition, y: Number(event.target.value) }, { shouldDirty: true, shouldValidate: true })} />
+              </label>
+            </div>
+          )}
         </section>
 
         <section className="flex flex-col gap-4" aria-labelledby="style-heading">
@@ -502,6 +520,7 @@ export function FlyerEditor({
           <ExportSheet
             flyerId={flyer.id}
             format={format}
+            correlationId={correlationId.current}
             balance={creditBalance}
             disabled={!hasCurrentPreview || blockingIssues.length > 0 || generating || offline}
             onBalanceChange={setCreditBalance}
@@ -604,6 +623,7 @@ function contentSignature(content: FlyerContent): string {
     address: content.address ?? "",
     logoAssetId: content.logoAssetId ?? null,
     productImageAssetIds: content.productImageAssetIds,
+    imagePosition: content.imagePosition,
     themeId: content.themeId,
     format: content.format,
   });

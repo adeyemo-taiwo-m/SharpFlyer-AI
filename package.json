@@ -15,7 +15,9 @@
     "test:visual": "vitest run --config vitest.visual.config.mjs tests/visual",
     "templates:validate": "tsx scripts/templates-validate.ts",
     "templates:sync": "node scripts/templates-sync.mjs",
-    "check:design": "node scripts/check-design.mjs"
+    "check:design": "node scripts/check-design.mjs",
+    "check:performance": "node scripts/check-performance.mjs",
+    "check:security": "node scripts/check-security.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

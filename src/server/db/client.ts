@@ -5,13 +5,16 @@ import { createAppError, type AppError } from "@/lib/errors";
 import { err, ok, type Result } from "@/types/result";
 import type {
   AssetRow,
+  AnalyticsEventRow,
   AiRequestRow,
+  AuditLogRow,
   BrandProfileRow,
   CreditLedgerRow,
   FlyerRow,
   FlyerVersionRow,
   PaymentRow,
   ProfileRow,
+  RenderJobRow,
   SubscriptionRow,
   TemplateRow,
   WebhookEventRow,
@@ -34,6 +37,9 @@ export type CoreDataStoreState = {
   subscriptions: Map<string, SubscriptionRow>;
   webhookEvents: Map<string, WebhookEventRow>;
   aiRequests: Map<string, AiRequestRow>;
+  analyticsEvents: Map<string, AnalyticsEventRow>;
+  auditLogs: Map<string, AuditLogRow>;
+  renderJobs: Map<string, RenderJobRow>;
   userLocks: Map<string, Promise<void>>;
 };
 
@@ -50,6 +56,9 @@ export function createCoreDataStoreState(): CoreDataStoreState {
     subscriptions: new Map(),
     webhookEvents: new Map(),
     aiRequests: new Map(),
+    analyticsEvents: new Map(),
+    auditLogs: new Map(),
+    renderJobs: new Map(),
     userLocks: new Map(),
   };
 }
@@ -200,7 +209,16 @@ export class CoreRepository {
   // --- templates ---
   listTemplates(options?: { category?: string; includeUnpublished?: boolean }): Result<TemplateRow[], AppError> {
     const canSeeAll = this.actor.role === "service_role" && options?.includeUnpublished;
-    const rows = Array.from(this.state.templates.values()).filter((row) => {
+    const latest = new Map<string, TemplateRow>();
+    for (const row of Array.from(this.state.templates.values()).filter((candidate) => {
+      if (!canSeeAll && candidate.status !== "published") return false;
+      if (options?.category && candidate.category !== options.category) return false;
+      return true;
+    })) {
+      const current = latest.get(row.id);
+      if (!current || row.version > current.version) latest.set(row.id, row);
+    }
+    const rows = Array.from(latest.values()).filter((row) => {
       if (!canSeeAll && row.status !== "published") return false;
       if (options?.category && row.category !== options.category) return false;
       return true;
@@ -229,6 +247,18 @@ export class CoreRepository {
     };
     this.state.templates.set(key, row);
     return ok({ ...row });
+  }
+
+  updateTemplateStatus(templateId: string, version: number, status: TemplateRow["status"]): Result<TemplateRow, AppError> {
+    if (this.actor.role !== "service_role") {
+      return err(createAppError("FORBIDDEN", "Only admins can change template status."));
+    }
+    const key = `${templateId}@${version}`;
+    const existing = this.state.templates.get(key);
+    if (!existing) return err(createAppError("NOT_FOUND", "We could not find that template."));
+    const updated = { ...existing, status, updated_at: nowIso() };
+    this.state.templates.set(key, updated);
+    return ok({ ...updated });
   }
 
   // --- assets ---
@@ -444,6 +474,76 @@ export class CoreRepository {
         .filter((row) => row.user_id === userId)
         .filter((row) => !options?.kind || row.kind === options.kind)
         .filter((row) => !options?.since || row.created_at >= options.since)
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .map((row) => ({ ...row })),
+    );
+  }
+
+  // --- analytics, audit, and render observability ---
+  insertAnalyticsEvent(
+    input: Omit<AnalyticsEventRow, "id" | "created_at"> & { id?: string },
+  ): Result<AnalyticsEventRow, AppError> {
+    if (this.actor.role !== "service_role") {
+      return err(createAppError("FORBIDDEN", "Only the server can record analytics events."));
+    }
+    const row: AnalyticsEventRow = { ...input, id: input.id ?? randomUUID(), created_at: nowIso() };
+    this.state.analyticsEvents.set(row.id, row);
+    return ok({ ...row });
+  }
+
+  listAnalyticsEvents(userId: string): Result<AnalyticsEventRow[], AppError> {
+    const allowed = forbidCrossUser(this.actor, userId);
+    if (!allowed.ok) return allowed;
+    return ok(
+      Array.from(this.state.analyticsEvents.values())
+        .filter((row) => row.user_id === userId)
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .map((row) => ({ ...row })),
+    );
+  }
+
+  insertAuditLog(
+    input: Omit<AuditLogRow, "id" | "created_at"> & { id?: string },
+  ): Result<AuditLogRow, AppError> {
+    if (this.actor.role !== "service_role") {
+      return err(createAppError("FORBIDDEN", "Only the server can record audit logs."));
+    }
+    const row: AuditLogRow = { ...input, id: input.id ?? randomUUID(), created_at: nowIso() };
+    this.state.auditLogs.set(row.id, row);
+    return ok({ ...row });
+  }
+
+  listAuditLogs(): Result<AuditLogRow[], AppError> {
+    if (this.actor.role !== "service_role") {
+      return err(createAppError("FORBIDDEN", "Only admins can read audit logs."));
+    }
+    return ok(
+      Array.from(this.state.auditLogs.values())
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .map((row) => ({ ...row })),
+    );
+  }
+
+  insertRenderJob(
+    input: Omit<RenderJobRow, "id" | "created_at"> & { id?: string },
+  ): Result<RenderJobRow, AppError> {
+    if (this.actor.role !== "service_role") {
+      return err(createAppError("FORBIDDEN", "Only the server can record render jobs."));
+    }
+    const existing = Array.from(this.state.renderJobs.values()).find((row) => row.job_id === input.job_id);
+    if (existing) return ok({ ...existing });
+    const row: RenderJobRow = { ...input, id: input.id ?? randomUUID(), created_at: nowIso() };
+    this.state.renderJobs.set(row.id, row);
+    return ok({ ...row });
+  }
+
+  listRenderJobs(userId?: string): Result<RenderJobRow[], AppError> {
+    if (this.actor.role !== "service_role" && (!userId || this.actor.role !== "authenticated" || this.actor.userId !== userId)) {
+      return err(createAppError("FORBIDDEN", "You do not have permission to access render jobs."));
+    }
+    return ok(
+      Array.from(this.state.renderJobs.values())
+        .filter((row) => !userId || row.user_id === userId)
         .sort((a, b) => b.created_at.localeCompare(a.created_at))
         .map((row) => ({ ...row })),
     );

@@ -2,6 +2,7 @@ import { createAppError, type AppError } from "@/lib/errors";
 import { RenderRequestSchema, RenderWorkerResponseSchema } from "@/schemas/render";
 import { err, ok, type Result } from "@/types/result";
 import type { RenderIssue, RenderRequest } from "@/types/render";
+import { captureServerError } from "@/server/observability";
 
 export type RenderResponse = {
   jobId: string;
@@ -54,7 +55,8 @@ export class HttpRenderClient implements RenderClient {
       }
 
       return ok({ jobId: payload.jobId, outputBuffer: Buffer.from(payload.outputBase64, "base64"), warnings: payload.warnings ?? [], errors: payload.errors ?? [], metrics: payload.metrics });
-    } catch {
+    } catch (error) {
+      captureServerError(error, { component: "render-client", mode: "http" });
       return err(createAppError("RENDER_FAILED"));
     }
   }
@@ -100,7 +102,8 @@ export class LocalRenderClient implements RenderClient {
         errors: result.errors ?? [],
         metrics: result.metrics,
       });
-    } catch {
+    } catch (error) {
+      captureServerError(error, { component: "render-client", mode: "local" });
       return err(createAppError("RENDER_FAILED"));
     }
   }

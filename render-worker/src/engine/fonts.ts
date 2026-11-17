@@ -19,7 +19,7 @@ async function listFiles(directory: string): Promise<string[]> {
 }
 
 export async function findFontPath(templateDirectory: string, fontName: string, weight: number): Promise<string> {
-  const directories = [join(templateDirectory, "assets")];
+  const directories = [join(templateDirectory, "assets"), join(process.cwd(), "templates", "solar-bold-001", "assets")];
   let parent = dirname(templateDirectory);
   for (let depth = 0; depth < 2; depth += 1) {
     directories.push(join(parent, "assets"));

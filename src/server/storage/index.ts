@@ -294,6 +294,7 @@ export async function storeRenderedAsset(input: {
   width: number;
   height: number;
   hash: string;
+  correlationId?: string;
   storageState?: StorageServiceState;
   dbState?: CoreDataStoreState;
 }): Promise<Result<AssetRow, AppError>> {
@@ -301,7 +302,8 @@ export async function storeRenderedAsset(input: {
   const dbState = input.dbState ?? getDefaultCoreDataStoreState();
   const assetId = randomUUID();
   const ext = input.mimeType === "image/jpeg" ? "jpg" : "png";
-  const bucketPath = `${input.userId}/${input.kind}/${assetId}.${ext}`;
+  const correlationSegment = input.correlationId?.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80) || "asset";
+  const bucketPath = `${input.userId}/${input.kind}/${correlationSegment}/${assetId}.${ext}`;
 
   storageState.storedObjects.set(bucketPath, input.bytes);
 

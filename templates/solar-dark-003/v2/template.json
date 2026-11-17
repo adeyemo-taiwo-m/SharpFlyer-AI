@@ -1,0 +1,514 @@
+{
+  "meta": {
+    "id": "solar-dark-003",
+    "version": 2,
+    "title": "Solar Power Package: Dark",
+    "category": "solar",
+    "tags": [
+      "inverter",
+      "battery",
+      "dark"
+    ],
+    "style": "dark",
+    "license": {
+      "author": "SharpFlyer AI",
+      "type": "original artwork; OFL-1.1 fonts",
+      "fonts": [
+        "Inter",
+        "Noto Sans"
+      ],
+      "source": "https://github.com/rsms/inter/blob/master/LICENSE.txt"
+    }
+  },
+  "formats": {
+    "ig_post": {
+      "width": 1080,
+      "height": 1080,
+      "safeArea": 48
+    },
+    "status": {
+      "width": 1080,
+      "height": 1920,
+      "safeArea": 64
+    },
+    "story": {
+      "width": 1080,
+      "height": 1920,
+      "safeArea": 64
+    },
+    "fb_post": {
+      "width": 1200,
+      "height": 630,
+      "safeArea": 40
+    },
+    "a4": {
+      "width": 2480,
+      "height": 3508,
+      "safeArea": 96
+    }
+  },
+  "palettes": [
+    {
+      "id": "charcoal-orange",
+      "roles": {
+        "bg": "#171717",
+        "primary": "#FF7A45",
+        "text": "#FFF7ED",
+        "muted": "#D6C7BC",
+        "accent": "#3A2923"
+      }
+    },
+    {
+      "id": "charcoal-lime",
+      "roles": {
+        "bg": "#101A18",
+        "primary": "#B8E04B",
+        "text": "#F4FFF2",
+        "muted": "#B5C9BB",
+        "accent": "#1D3930"
+      }
+    }
+  ],
+  "fields": [
+    {
+      "key": "headline",
+      "type": "text",
+      "required": true,
+      "maxLength": 60
+    },
+    {
+      "key": "body",
+      "type": "text",
+      "required": false,
+      "maxLength": 100
+    },
+    {
+      "key": "price",
+      "type": "price",
+      "required": false
+    },
+    {
+      "key": "phone",
+      "type": "phone",
+      "required": true
+    },
+    {
+      "key": "businessName",
+      "type": "text",
+      "required": true,
+      "maxLength": 48
+    },
+    {
+      "key": "productImage",
+      "type": "image",
+      "required": false
+    }
+  ],
+  "regions": {
+    "ig_post": {
+      "headline": {
+        "x": 60,
+        "y": 120,
+        "w": 620,
+        "h": 220,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 42,
+        "maxSize": 84,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "text"
+      },
+      "body": {
+        "x": 60,
+        "y": 360,
+        "w": 560,
+        "h": 100,
+        "font": "Inter",
+        "weight": 400,
+        "minSize": 22,
+        "maxSize": 30,
+        "lineHeight": 1.2,
+        "overflow": "truncate",
+        "color": "muted"
+      },
+      "price": {
+        "x": 60,
+        "y": 760,
+        "w": 560,
+        "h": 120,
+        "font": "Noto Sans",
+        "weight": 700,
+        "minSize": 44,
+        "maxSize": 76,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "primary",
+        "format": "currency"
+      },
+      "phone": {
+        "x": 60,
+        "y": 950,
+        "w": 560,
+        "h": 48,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 24,
+        "maxSize": 34,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "businessName": {
+        "x": 60,
+        "y": 56,
+        "w": 430,
+        "h": 48,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 20,
+        "maxSize": 28,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "productImage": {
+        "x": 640,
+        "y": 230,
+        "w": 380,
+        "h": 520,
+        "fit": "contain",
+        "shadow": true
+      }
+    },
+    "status": {
+      "headline": {
+        "x": 64,
+        "y": 150,
+        "w": 760,
+        "h": 320,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 48,
+        "maxSize": 96,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "text"
+      },
+      "body": {
+        "x": 64,
+        "y": 500,
+        "w": 700,
+        "h": 130,
+        "font": "Inter",
+        "weight": 400,
+        "minSize": 24,
+        "maxSize": 34,
+        "lineHeight": 1.2,
+        "overflow": "truncate",
+        "color": "muted"
+      },
+      "price": {
+        "x": 64,
+        "y": 1400,
+        "w": 680,
+        "h": 150,
+        "font": "Noto Sans",
+        "weight": 700,
+        "minSize": 54,
+        "maxSize": 96,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "primary",
+        "format": "currency"
+      },
+      "phone": {
+        "x": 64,
+        "y": 1670,
+        "w": 680,
+        "h": 60,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 28,
+        "maxSize": 40,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "businessName": {
+        "x": 64,
+        "y": 82,
+        "w": 560,
+        "h": 64,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 22,
+        "maxSize": 34,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "productImage": {
+        "x": 580,
+        "y": 650,
+        "w": 430,
+        "h": 620,
+        "fit": "contain",
+        "shadow": true
+      }
+    },
+    "story": {
+      "headline": {
+        "x": 64,
+        "y": 150,
+        "w": 760,
+        "h": 320,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 48,
+        "maxSize": 96,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "text"
+      },
+      "body": {
+        "x": 64,
+        "y": 500,
+        "w": 700,
+        "h": 130,
+        "font": "Inter",
+        "weight": 400,
+        "minSize": 24,
+        "maxSize": 34,
+        "lineHeight": 1.2,
+        "overflow": "truncate",
+        "color": "muted"
+      },
+      "price": {
+        "x": 64,
+        "y": 1400,
+        "w": 680,
+        "h": 150,
+        "font": "Noto Sans",
+        "weight": 700,
+        "minSize": 54,
+        "maxSize": 96,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "primary",
+        "format": "currency"
+      },
+      "phone": {
+        "x": 64,
+        "y": 1670,
+        "w": 680,
+        "h": 60,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 28,
+        "maxSize": 40,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "businessName": {
+        "x": 64,
+        "y": 82,
+        "w": 560,
+        "h": 64,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 22,
+        "maxSize": 34,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "productImage": {
+        "x": 580,
+        "y": 650,
+        "w": 430,
+        "h": 620,
+        "fit": "contain",
+        "shadow": true
+      }
+    },
+    "fb_post": {
+      "headline": {
+        "x": 40,
+        "y": 70,
+        "w": 600,
+        "h": 160,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 30,
+        "maxSize": 66,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "text"
+      },
+      "body": {
+        "x": 40,
+        "y": 250,
+        "w": 560,
+        "h": 90,
+        "font": "Inter",
+        "weight": 400,
+        "minSize": 18,
+        "maxSize": 26,
+        "lineHeight": 1.2,
+        "overflow": "truncate",
+        "color": "muted"
+      },
+      "price": {
+        "x": 40,
+        "y": 470,
+        "w": 430,
+        "h": 80,
+        "font": "Noto Sans",
+        "weight": 700,
+        "minSize": 30,
+        "maxSize": 52,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "primary",
+        "format": "currency"
+      },
+      "phone": {
+        "x": 40,
+        "y": 548,
+        "w": 500,
+        "h": 34,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 18,
+        "maxSize": 24,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "businessName": {
+        "x": 40,
+        "y": 48,
+        "w": 420,
+        "h": 70,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 16,
+        "maxSize": 24,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "productImage": {
+        "x": 680,
+        "y": 60,
+        "w": 480,
+        "h": 460,
+        "fit": "contain",
+        "shadow": true
+      }
+    },
+    "a4": {
+      "headline": {
+        "x": 120,
+        "y": 240,
+        "w": 1400,
+        "h": 520,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 100,
+        "maxSize": 190,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "text"
+      },
+      "body": {
+        "x": 120,
+        "y": 820,
+        "w": 1100,
+        "h": 240,
+        "font": "Inter",
+        "weight": 400,
+        "minSize": 46,
+        "maxSize": 70,
+        "lineHeight": 1.2,
+        "overflow": "truncate",
+        "color": "muted"
+      },
+      "price": {
+        "x": 120,
+        "y": 2500,
+        "w": 1200,
+        "h": 300,
+        "font": "Noto Sans",
+        "weight": 700,
+        "minSize": 100,
+        "maxSize": 180,
+        "lineHeight": 1.05,
+        "overflow": "shrink",
+        "color": "primary",
+        "format": "currency"
+      },
+      "phone": {
+        "x": 120,
+        "y": 3040,
+        "w": 1200,
+        "h": 100,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 50,
+        "maxSize": 76,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "businessName": {
+        "x": 120,
+        "y": 120,
+        "w": 1400,
+        "h": 180,
+        "font": "Inter",
+        "weight": 700,
+        "minSize": 28,
+        "maxSize": 64,
+        "lineHeight": 1.1,
+        "overflow": "fail",
+        "color": "text"
+      },
+      "productImage": {
+        "x": 1450,
+        "y": 700,
+        "w": 850,
+        "h": 1300,
+        "fit": "contain",
+        "shadow": true
+      }
+    }
+  },
+  "decor": [
+    {
+      "type": "shape",
+      "kind": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 2480,
+      "h": 3508,
+      "fill": "bg"
+    },
+    {
+      "type": "shape",
+      "kind": "circle",
+      "x": 1700,
+      "y": 100,
+      "w": 650,
+      "h": 650,
+      "fill": "accent",
+      "opacity": 0.9
+    }
+  ],
+  "constraints": {
+    "minContrast": 4.5,
+    "maxHeadlineLines": 3
+  }
+}

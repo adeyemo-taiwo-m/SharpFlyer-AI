@@ -11,7 +11,7 @@ const templates = [
   { id: "solar-clean-002", themeId: "paper-blue" },
   { id: "solar-dark-003", themeId: "charcoal-orange" },
 ] as const;
-const formats = ["ig_post", "status"] as const;
+const formats = ["ig_post", "status", "story", "fb_post", "a4"] as const;
 const fixtures = ["short", "normal", "long", "extreme"] as const;
 
 function assetsForFixture(fixture: (typeof fixtures)[number]) {
@@ -35,7 +35,7 @@ for (const template of templates) {
         const result = await renderFlyer({
           jobId: `visual-${template.id}-${format}-${fixture}`,
           templateId: template.id,
-          templateVersion: 1,
+          templateVersion: 2,
           format,
           scale: 1,
           content,

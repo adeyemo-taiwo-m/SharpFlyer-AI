@@ -5,6 +5,7 @@ import { createAppError, type AppError } from "@/lib/errors";
 import { FlyerContentSchema, type FlyerContent } from "@/schemas/flyer";
 import { FORMAT_SIZES, FormatSchema, type FlyerFormat } from "@/schemas/format";
 import { requireUser, requireVerifiedUser, type SessionUser } from "@/server/auth";
+import { track } from "@/server/analytics";
 import { consumeCredit, refundCredit } from "@/server/credits";
 import {
   CoreRepository,
@@ -19,6 +20,7 @@ import {
   type StorageServiceState,
 } from "@/server/storage";
 import { loadTemplate } from "@/server/templates/load";
+import { logRenderJob, newCorrelationId } from "@/server/observability";
 import type { FlyerRow, FlyerVersionRow } from "@/types/database";
 import type { RenderIssue } from "@/types/render";
 import type { Template } from "@/schemas/template";
@@ -30,6 +32,7 @@ export type FlyersServiceOptions = {
   storageState?: StorageServiceState;
   renderClient?: RenderClient;
   templateRoot?: string;
+  correlationId?: string;
 };
 
 export type ExportOptions = {
@@ -197,7 +200,7 @@ export async function createDraftFromTemplate(
     format: chosenFormat,
   };
 
-  return repo.insertFlyer({
+  const result = repo.insertFlyer({
     user_id: userId,
     title: template.meta.title,
     template_id: template.meta.id,
@@ -208,6 +211,8 @@ export async function createDraftFromTemplate(
     status: "draft",
     preview_asset_id: null,
   });
+  if (result.ok) void track("flyer_created", { format: chosenFormat }, { userId, state });
+  return result;
 }
 
 /**
@@ -338,6 +343,8 @@ export async function requestPreviewRender(
   const storageState = options.storageState ?? getDefaultStorageServiceState();
   const renderClient = options.renderClient ?? getDefaultRenderClient();
   const userId = flyer.user_id;
+  const correlationId = options.correlationId ?? newCorrelationId();
+  const jobId = `preview-${flyer.id}-${randomUUID()}`;
 
   const logoUrl = resolveAssetDataUrl(userId, flyer.content.logoAssetId, state, storageState);
   const productImageUrls = flyer.content.productImageAssetIds
@@ -345,7 +352,8 @@ export async function requestPreviewRender(
     .filter((u): u is string => Boolean(u));
 
   const renderRes = await renderClient.render({
-    jobId: `preview-${flyer.id}-${randomUUID()}`,
+    jobId,
+    correlationId,
     templateId: flyer.template_id,
     templateVersion: flyer.template_version,
     format: flyer.content.format,
@@ -361,8 +369,12 @@ export async function requestPreviewRender(
   });
 
   if (!renderRes.ok) {
+    logRenderJob({ jobId, correlationId, userId, templateId: flyer.template_id, templateVersion: flyer.template_version, format: flyer.content.format, purpose: "preview", result: "failed", errorCode: renderRes.error.code }, state);
+    void track("preview_failed", { format: flyer.content.format }, { userId, correlationId, state });
     return renderRes;
   }
+  logRenderJob({ jobId, correlationId, userId, templateId: flyer.template_id, templateVersion: flyer.template_version, format: flyer.content.format, purpose: "preview", durationMs: renderRes.value.metrics.durationMs, result: "succeeded" }, state);
+  void track("preview_generated", { format: flyer.content.format }, { userId, correlationId, state });
 
   const dimensions = FORMAT_SIZES[flyer.content.format];
   const hash = createHash("sha256").update(renderRes.value.outputBuffer).digest("hex");
@@ -374,6 +386,7 @@ export async function requestPreviewRender(
     width: dimensions.width,
     height: dimensions.height,
     hash,
+    correlationId,
     storageState,
     dbState: state,
   });
@@ -430,6 +443,7 @@ export async function exportFlyer(
   const storageState = options.storageState ?? getDefaultStorageServiceState();
   const renderClient = options.renderClient ?? getDefaultRenderClient();
   const userId = authRes.value.user.id;
+  const correlationId = options.correlationId ?? newCorrelationId();
   const userRepo = new CoreRepository({ role: "authenticated", userId }, state);
   const serviceRepo = new CoreRepository({ role: "service_role" }, state);
 
@@ -437,6 +451,7 @@ export async function exportFlyer(
     const flyerRes = userRepo.getFlyer(flyerId);
     if (!flyerRes.ok) return flyerRes;
     const flyer = flyerRes.value;
+    void track("export_started", { format: flyer.format }, { userId, correlationId, state });
 
     const versionsRes = userRepo.listFlyerVersions(flyer.id);
     if (!versionsRes.ok) return versionsRes;
@@ -557,8 +572,10 @@ export async function exportFlyer(
       .map((id) => resolveAssetDataUrl(userId, id, state, storageState))
       .filter((u): u is string => Boolean(u));
 
+    const jobId = `export-${versionId}`;
     const renderRes = await renderClient.render({
-      jobId: `export-${versionId}`,
+      jobId,
+      correlationId,
       templateId: flyer.template_id,
       templateVersion: flyer.template_version,
       format: content.format,
@@ -574,6 +591,8 @@ export async function exportFlyer(
     });
 
     if (!renderRes.ok) {
+      logRenderJob({ jobId, correlationId, userId, templateId: flyer.template_id, templateVersion: flyer.template_version, format: content.format, purpose: "export", result: "failed", errorCode: renderRes.error.code }, state);
+      void track("export_failed", { format: content.format, reason: renderRes.error.code }, { userId, correlationId, state });
       // Automatic refund in the exact same failure path (Invariant 3 & 8)
       await refundCredit(userId, creditReference, {
         state,
@@ -581,6 +600,7 @@ export async function exportFlyer(
       });
       return renderRes;
     }
+    logRenderJob({ jobId, correlationId, userId, templateId: flyer.template_id, templateVersion: flyer.template_version, format: content.format, purpose: "export", durationMs: renderRes.value.metrics.durationMs, result: "succeeded" }, state);
 
     // 5. Store the export and return short-lived signed download URL
     const dimensions = FORMAT_SIZES[content.format];
@@ -594,6 +614,7 @@ export async function exportFlyer(
       width: dimensions.width * scale,
       height: dimensions.height * scale,
       hash,
+      correlationId,
       storageState,
       dbState: state,
     });
@@ -631,7 +652,7 @@ export async function exportFlyer(
       return signedRes;
     }
 
-    return ok({
+    const exportResult = ok({
       flyer: finalFlyer,
       version: attachedVersionRes.value,
       downloadUrl: signedRes.value.url,
@@ -640,6 +661,8 @@ export async function exportFlyer(
       reusedExisting: false,
       warnings: renderRes.value.warnings,
     });
+    void track("export_succeeded", { format: content.format, reused: false }, { userId, correlationId, state });
+    return exportResult;
   });
 }
 

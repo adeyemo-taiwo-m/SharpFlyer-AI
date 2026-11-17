@@ -180,3 +180,59 @@ export type AiRequestRow = {
   error_code: string | null;
   created_at: string;
 };
+
+export const ANALYTICS_EVENT_NAMES = [
+  "sign_in_completed",
+  "template_viewed",
+  "template_selected",
+  "flyer_created",
+  "draft_saved",
+  "preview_generated",
+  "preview_failed",
+  "export_started",
+  "export_succeeded",
+  "export_failed",
+  "flyer_shared",
+  "share_fallback_used",
+  "ai_suggestion_requested",
+  "ai_suggestion_selected",
+  "paid_pilot_payment_succeeded",
+  "export_satisfaction_submitted",
+] as const;
+export type AnalyticsEventName = (typeof ANALYTICS_EVENT_NAMES)[number];
+
+export type AnalyticsEventRow = {
+  id: string;
+  user_id: string | null;
+  event: AnalyticsEventName;
+  properties: Record<string, string | number | boolean | null>;
+  correlation_id: string | null;
+  created_at: string;
+};
+
+export type AuditLogRow = {
+  id: string;
+  actor_user_id: string;
+  action: string;
+  target_type: string;
+  target_id: string | null;
+  metadata: Record<string, string | number | boolean | null>;
+  created_at: string;
+};
+
+export type RenderJobResult = "succeeded" | "failed";
+
+export type RenderJobRow = {
+  id: string;
+  job_id: string;
+  correlation_id: string | null;
+  user_id: string | null;
+  template_id: string;
+  template_version: number;
+  format: FlyerFormat;
+  purpose: "preview" | "export";
+  duration_ms: number | null;
+  result: RenderJobResult;
+  error_code: string | null;
+  created_at: string;
+};

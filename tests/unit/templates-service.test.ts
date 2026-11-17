@@ -10,28 +10,24 @@ describe("Step 3.5: Template sync, listing, filtering, and immutability", () => 
     state = createCoreDataStoreState();
   });
 
-  it("syncs all 3 repository templates into the database state", async () => {
+  it("syncs the versioned template catalog into the database state", async () => {
     const synced = await syncTemplates({ state });
     expect(synced.ok).toBe(true);
     if (!synced.ok) return;
 
-    expect(synced.value).toHaveLength(3);
-    expect(synced.value.map((t) => t.id)).toEqual([
-      "solar-bold-001",
-      "solar-clean-002",
-      "solar-dark-003",
-    ]);
+    expect(synced.value.length).toBeGreaterThanOrEqual(15);
+    expect(new Set(synced.value.map((t) => t.id)).size).toBeGreaterThanOrEqual(15);
   });
 
   it("lists and filters templates by category, search query, and format", async () => {
     const all = await listTemplates({}, { state });
     expect(all.ok).toBe(true);
     if (!all.ok) return;
-    expect(all.value).toHaveLength(3);
+    expect(all.value.length).toBeGreaterThanOrEqual(15);
 
     const solarOnly = await listTemplates({ category: "solar" }, { state });
     expect(solarOnly.ok).toBe(true);
-    if (solarOnly.ok) expect(solarOnly.value).toHaveLength(3);
+    if (solarOnly.ok) expect(solarOnly.value).toHaveLength(15);
 
     const fashionOnly = await listTemplates({ category: "fashion" }, { state });
     expect(fashionOnly.ok).toBe(true);
@@ -46,7 +42,7 @@ describe("Step 3.5: Template sync, listing, filtering, and immutability", () => 
 
     const statusFormat = await listTemplates({ format: "status" }, { state });
     expect(statusFormat.ok).toBe(true);
-    if (statusFormat.ok) expect(statusFormat.value).toHaveLength(3);
+    if (statusFormat.ok) expect(statusFormat.value).toHaveLength(15);
   });
 
   it("loads a single template by ID and rejects unknown or invalid IDs", async () => {

@@ -16,6 +16,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { FORMAT_SIZES, type FlyerFormat } from "@/schemas/format";
+import { trackClient } from "@/lib/analytics";
 
 const FORMAT_LABELS: Record<FlyerFormat, string> = {
   ig_post: "Instagram Post",
@@ -28,6 +29,7 @@ const FORMAT_LABELS: Record<FlyerFormat, string> = {
 export function ExportSheet({
   flyerId,
   format,
+  correlationId,
   balance,
   disabled,
   onBalanceChange,
@@ -35,6 +37,7 @@ export function ExportSheet({
 }: {
   flyerId: string;
   format: FlyerFormat;
+  correlationId: string;
   balance: number;
   disabled?: boolean;
   onBalanceChange: (balance: number) => void;
@@ -46,6 +49,7 @@ export function ExportSheet({
   const [working, setWorking] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [exportedUrl, setExportedUrl] = React.useState<string | null>(null);
+  const [satisfaction, setSatisfaction] = React.useState<"good" | "needs_work" | null>(null);
 
   const afterBalance = Math.max(0, balance - 1);
   const dimensions = FORMAT_SIZES[format];
@@ -53,7 +57,7 @@ export function ExportSheet({
   async function handleExport() {
     setError(null);
     setWorking(true);
-    const result = await exportFlyerAction(flyerId, { fileType, scale });
+    const result = await exportFlyerAction(flyerId, { fileType, scale }, correlationId);
     setWorking(false);
 
     if (!result.ok) {
@@ -63,6 +67,7 @@ export function ExportSheet({
     }
 
     setExportedUrl(result.value.downloadUrl);
+    setSatisfaction(null);
     onBalanceChange(result.value.balanceAfter);
     toast.success("Flyer exported");
   }
@@ -70,15 +75,32 @@ export function ExportSheet({
   async function handleShare() {
     if (!exportedUrl) return;
     const url = new URL(exportedUrl, window.location.origin).toString();
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], `sharpflyer-${flyerId}.${fileType}`, { type: blob.type || `image/${fileType}` });
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ title: "SharpFlyer flyer", files: [file] });
+        trackClient("flyer_shared", { format, method: "file" }, correlationId);
+        return;
+      }
+    } catch {
+      // Fall through to URL sharing or download when file sharing is unavailable.
+    }
     if (navigator.share) {
       try {
         await navigator.share({ title: "SharpFlyer flyer", url });
+        trackClient("flyer_shared", { format, method: "url" }, correlationId);
       } catch {
         // The user may dismiss the share sheet; there is no error to show.
       }
       return;
     }
-    window.open(url, "_blank", "noopener,noreferrer");
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `sharpflyer-${flyerId}.${fileType}`;
+    anchor.click();
+    trackClient("share_fallback_used", { format, method: "download" }, correlationId);
   }
 
   function handleOpenChange(nextOpen: boolean) {
@@ -86,6 +108,7 @@ export function ExportSheet({
     if (!nextOpen) {
       setError(null);
       setExportedUrl(null);
+      setSatisfaction(null);
     }
   }
 
@@ -125,6 +148,13 @@ export function ExportSheet({
                     Save to device
                   </a>
                 </Button>
+              </div>
+              <div className="flex flex-col gap-2 rounded-2xl bg-surface p-4" aria-label="Export satisfaction">
+                <p className="text-small text-foreground">How did this export feel?</p>
+                <div className="flex gap-2">
+                  <Button type="button" size="sm" variant={satisfaction === "good" ? "secondary" : "ghost"} onClick={() => { setSatisfaction("good"); trackClient("export_satisfaction_submitted", { rating: "good", format }, correlationId); }}>Good</Button>
+                  <Button type="button" size="sm" variant={satisfaction === "needs_work" ? "secondary" : "ghost"} onClick={() => { setSatisfaction("needs_work"); trackClient("export_satisfaction_submitted", { rating: "needs_work", format }, correlationId); }}>Needs work</Button>
+                </div>
               </div>
             </div>
           ) : (

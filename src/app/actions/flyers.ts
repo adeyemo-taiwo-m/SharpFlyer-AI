@@ -135,13 +135,14 @@ export async function saveDraftAction(
 export async function generateFlyerPreviewAction(
   flyerId: string,
   content: unknown,
+  correlationId?: string,
 ): Promise<
   Result<
     PreviewRenderResult,
     AppError & { warnings?: RenderIssue[]; issues?: RenderIssue[] }
   >
 > {
-  return requestPreviewRender(flyerId, content);
+  return requestPreviewRender(flyerId, content, { correlationId });
 }
 
 /**
@@ -150,8 +151,9 @@ export async function generateFlyerPreviewAction(
 export async function exportFlyerAction(
   flyerId: string,
   exportOptions: ExportOptions | number = {},
+  correlationId?: string,
 ): Promise<Result<ExportFlyerResult, AppError & { issues?: RenderIssue[] }>> {
-  return exportFlyer(flyerId, exportOptions);
+  return exportFlyer(flyerId, exportOptions, { correlationId });
 }
 
 export async function duplicateFlyerAction(flyerId: string): Promise<Result<{ draftId: string }, AppError>> {

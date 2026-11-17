@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative } from "node:path";
+import { stat } from "node:fs/promises";
 
 import { TemplateSchema, type Template } from "@/schemas/template";
 
@@ -117,6 +118,10 @@ export async function validateTemplateDirectory(templateDirectory: string, optio
     const parentAssets = join(dirname(templateDirectory), "assets");
     if (await fileExists(parentAssets)) assetDirectories.push(parentAssets);
   }
+  const isVersionDirectory = /^v\d+$|^\d+$/.test(basename(templateDirectory));
+  assetDirectories.push(isVersionDirectory
+    ? join(dirname(dirname(templateDirectory)), "solar-bold-001", "assets")
+    : join(dirname(templateDirectory), "solar-bold-001", "assets"));
   const assetFiles = (await Promise.all(assetDirectories.map((directory) => listFiles(directory).catch(() => [] as string[])))).flat();
   const fontAssetNames = assetFiles
     .filter((asset) => /\.(woff2?|ttf|otf)$/i.test(asset))
@@ -179,7 +184,7 @@ export async function validateTemplates(templateRoot: string, options: TemplateV
 
 async function fileExists(path: string): Promise<boolean> {
   try {
-    await readFile(path);
+    await stat(path);
     return true;
   } catch {
     return false;

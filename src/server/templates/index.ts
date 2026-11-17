@@ -104,8 +104,13 @@ export async function listTemplates(
   const normalizedCategory = filters.category?.trim().toLowerCase();
   const normalizedSearch = filters.search?.trim().toLowerCase();
 
-  const summaries: TemplateSummary[] = [];
+  const latestById = new Map<string, (typeof report.templates)[number]>();
   for (const validated of report.templates) {
+    const current = latestById.get(validated.template.meta.id);
+    if (!current || validated.template.meta.version > current.template.meta.version) latestById.set(validated.template.meta.id, validated);
+  }
+  const summaries: TemplateSummary[] = [];
+  for (const validated of latestById.values()) {
     const { meta, formats, palettes } = validated.template;
     const supportedFormats = Object.keys(formats) as FlyerFormat[];
 

@@ -1,10 +1,100 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`renders solar-bold-001 / a4 / extreme 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 54,
+  "sha256": "bd8761be87a4e373eab59b8d7fac11a203f613a1019bda803efbccc497aba07f",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-bold-001 / a4 / long 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 54,
+  "sha256": "1a7fbf697ce799da94c5d2338ee5bbe5c22d1e932a418705c42a2633b81483e6",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-bold-001 / a4 / normal 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 54,
+  "sha256": "9427f16444da195968cf5939d4e87548c19f652ee9913a788d75a118576362fc",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-bold-001 / a4 / short 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 64,
+  "sha256": "8fab5549cb2a0250b299e796170b02c635e05664bdca9e33bd5f44f8b61f7117",
+  "warningCodes": [],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-bold-001 / fb_post / extreme 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 20,
+  "sha256": "a31bfdaa079459318bc9d8da070c052cbb2329624da58392e5806c4dfd8b352e",
+  "warningCodes": [],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-bold-001 / fb_post / long 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 20,
+  "sha256": "c678a63d04df1aad9adf4a0f06716b76b2dfcadd222b9c2dd7781556bf2f50ba",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-bold-001 / fb_post / normal 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 20,
+  "sha256": "eedec237db04bd8e49e095afd34b4137f2127caf91534027d37ae6a2e3907da9",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-bold-001 / fb_post / short 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "c56192ffbda49551aaeb61b9a3fb2ba38c919a310652357333621e32d0e73b9c",
+  "warningCodes": [],
+  "width": 1200,
+}
+`;
+
 exports[`renders solar-bold-001 / ig_post / extreme 1`] = `
 {
   "height": 1080,
   "minFontSizeUsed": 21,
-  "sha256": "6f8225b0a178ac6eda1d7ea8fdb872cb7eb8abf5ce31f96d261bf915a96b05db",
+  "sha256": "729b3e51abbef10bb2756a64ca348c8119b37ac237eaa0e37bf9c06e818f6f49",
   "warningCodes": [],
   "width": 1080,
 }
@@ -13,8 +103,8 @@ exports[`renders solar-bold-001 / ig_post / extreme 1`] = `
 exports[`renders solar-bold-001 / ig_post / long 1`] = `
 {
   "height": 1080,
-  "minFontSizeUsed": 22,
-  "sha256": "41f40c6e74a237ebca2aa6f836640de91ad9174eff8e7679ef76fa8af2acc1d3",
+  "minFontSizeUsed": 21,
+  "sha256": "b3291b968fe17ba1638a8d5d06d9f27c6d1dc5df346ef4b1c3f5b7cbf55d12d0",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -26,7 +116,7 @@ exports[`renders solar-bold-001 / ig_post / normal 1`] = `
 {
   "height": 1080,
   "minFontSizeUsed": 24,
-  "sha256": "ac0d4abdb0e4a53f9487f3d6f54a17cf18d3544cbbef64fe3d55c8adf9fafc38",
+  "sha256": "f0f2a0bd9aa85608db44bbffa30f6411f1cc430636d37b62a867a25cbd71d12a",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -38,7 +128,7 @@ exports[`renders solar-bold-001 / ig_post / short 1`] = `
 {
   "height": 1080,
   "minFontSizeUsed": 28,
-  "sha256": "110a45135c12e1728478fbdb3c661aaf1f996c7bb513b03d5a9c4106ee7d6dcb",
+  "sha256": "d893a766484c4bcc216cefdc36f4ce8b899cedbeecccca344728582499f00f0c",
   "warningCodes": [],
   "width": 1080,
 }
@@ -48,7 +138,7 @@ exports[`renders solar-bold-001 / status / extreme 1`] = `
 {
   "height": 1920,
   "minFontSizeUsed": 28,
-  "sha256": "6894b91143168dc06b312df46b398cdf30e7c127fef51f8fe03cc7f9b4d74334",
+  "sha256": "e508beb8501852894bb967b9d9c4242a9b6691dcc8c5f980f160f7060a764227",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -60,7 +150,7 @@ exports[`renders solar-bold-001 / status / long 1`] = `
 {
   "height": 1920,
   "minFontSizeUsed": 27,
-  "sha256": "0751ed2f90780543e17b718a695da8f8783fd50c400b174ec9d1b4c3c92ca0fd",
+  "sha256": "acd85ede16a4fdd56578e5c155613846b6112a7638629845e82e1db2099d1b43",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -72,7 +162,7 @@ exports[`renders solar-bold-001 / status / normal 1`] = `
 {
   "height": 1920,
   "minFontSizeUsed": 28,
-  "sha256": "e9da211bc978e838e99c4fd178f80c0acd518ed9e13dabf6cea5728a5f30df18",
+  "sha256": "3c518d7c56837738f9e8a504ae4e517fe81a5733d97d0a007ede63187d1d4265",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -84,9 +174,145 @@ exports[`renders solar-bold-001 / status / short 1`] = `
 {
   "height": 1920,
   "minFontSizeUsed": 34,
-  "sha256": "5b26f3a22e041c812b4777542c1d6168af4e3922af07d75b9c253b442570c553",
+  "sha256": "7a8cdced5ecb4b756612b361c567ca2994e1b7ba5229836c4013db025d39ac74",
   "warningCodes": [],
   "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / story / extreme 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "e508beb8501852894bb967b9d9c4242a9b6691dcc8c5f980f160f7060a764227",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / story / long 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 27,
+  "sha256": "acd85ede16a4fdd56578e5c155613846b6112a7638629845e82e1db2099d1b43",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / story / normal 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 28,
+  "sha256": "3c518d7c56837738f9e8a504ae4e517fe81a5733d97d0a007ede63187d1d4265",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-bold-001 / story / short 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "7a8cdced5ecb4b756612b361c567ca2994e1b7ba5229836c4013db025d39ac74",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / a4 / extreme 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 58,
+  "sha256": "4b01a81cd302896712b0c3f961c61bd22fe9cd0ed10b423fed977e64f922fc59",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-clean-002 / a4 / long 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 56,
+  "sha256": "49085169ceadd17f4d89637f385794969777faddada38c538bbc8c97328454fd",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-clean-002 / a4 / normal 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 64,
+  "sha256": "539a72a757fe3e4ca22098eaf28d6fb9f1a026a259418d2f44fc45ac2121032d",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-clean-002 / a4 / short 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 64,
+  "sha256": "8ecbc51a384dc1b2f5cc98090240295e019dfd393720f9bd68669d46c13dcee6",
+  "warningCodes": [],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-clean-002 / fb_post / extreme 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "533fb8b0bd5ad4ce166d50d30578f0ea189c832b8063a1e9f18268011149e699",
+  "warningCodes": [],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-clean-002 / fb_post / long 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "c2db30b9c303b7400332fb7d29215957c0f4182e0836d12d78ed995cff3c7aa8",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-clean-002 / fb_post / normal 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "c226c2918fa47ee425d47860498852a6a0dbd09ac018f4d37fdb86b96bc58738",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-clean-002 / fb_post / short 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "60b7d74bb99ff993c14e6fe5de3289ceee7075f294a5488dda79da367562fc4f",
+  "warningCodes": [],
+  "width": 1200,
 }
 `;
 
@@ -94,7 +320,7 @@ exports[`renders solar-clean-002 / ig_post / extreme 1`] = `
 {
   "height": 1080,
   "minFontSizeUsed": 21,
-  "sha256": "5b0e9ba68374f2b2cb7f8bc9209c66efad194d38bc1e7d8caffad4228381c57a",
+  "sha256": "3580dfe507a1e6190ef50d1df8f22ec0dcf15a2ffa8b3e278b5980de64cdf691",
   "warningCodes": [],
   "width": 1080,
 }
@@ -103,8 +329,8 @@ exports[`renders solar-clean-002 / ig_post / extreme 1`] = `
 exports[`renders solar-clean-002 / ig_post / long 1`] = `
 {
   "height": 1080,
-  "minFontSizeUsed": 22,
-  "sha256": "70c77762a20813a94f770c04ecbe2737b01c1fbfb28944ad7688cf47635579ca",
+  "minFontSizeUsed": 21,
+  "sha256": "b650b5a47e9f8a213e027a40fca5fcb1a785f6bd467802a5063d4a60d484a200",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -115,8 +341,8 @@ exports[`renders solar-clean-002 / ig_post / long 1`] = `
 exports[`renders solar-clean-002 / ig_post / normal 1`] = `
 {
   "height": 1080,
-  "minFontSizeUsed": 23,
-  "sha256": "2e025f08db8321aa017ae192f108611b0bbd18fa7e6341b2d02ca10e1d72bf07",
+  "minFontSizeUsed": 28,
+  "sha256": "9604ab63fbe00a45d2c28b442a9073050e0c279455c2a93c5791d09538559cb4",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -128,7 +354,7 @@ exports[`renders solar-clean-002 / ig_post / short 1`] = `
 {
   "height": 1080,
   "minFontSizeUsed": 28,
-  "sha256": "4db61a0ebaa30dda327760b12addce24a8527f6d846d4160f0c0d01d15f3c46c",
+  "sha256": "73348afe0abc8faba082374e1f4abebf82a8119541a9a0e8770c7549369060b5",
   "warningCodes": [],
   "width": 1080,
 }
@@ -137,8 +363,8 @@ exports[`renders solar-clean-002 / ig_post / short 1`] = `
 exports[`renders solar-clean-002 / status / extreme 1`] = `
 {
   "height": 1920,
-  "minFontSizeUsed": 28,
-  "sha256": "385fc0f41b3bace0304b1eb9c298dbb37fbcd9d3f9b4feadcd606599f806c0d7",
+  "minFontSizeUsed": 29,
+  "sha256": "561114d1015ca510ab7b3b0919c86b3a581c3e2c7fd5809ab2328400a874e00b",
   "warningCodes": [],
   "width": 1080,
 }
@@ -147,8 +373,8 @@ exports[`renders solar-clean-002 / status / extreme 1`] = `
 exports[`renders solar-clean-002 / status / long 1`] = `
 {
   "height": 1920,
-  "minFontSizeUsed": 27,
-  "sha256": "0f7ffad71acceacdee2a6d87d04b91b06600005c939c0e7d1e737103a56d0bd5",
+  "minFontSizeUsed": 29,
+  "sha256": "36eea8e8bce58de6acc50c1af626cfae512940d3c9f2b8a3261564c8281595b7",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -159,8 +385,8 @@ exports[`renders solar-clean-002 / status / long 1`] = `
 exports[`renders solar-clean-002 / status / normal 1`] = `
 {
   "height": 1920,
-  "minFontSizeUsed": 28,
-  "sha256": "367515148087b6957fb92057cccdebcc67d5090873615b4391dbb138d2d2aa9d",
+  "minFontSizeUsed": 34,
+  "sha256": "1030323c5b067c5596d567ccf1abd215417c3e31ee1ab53f1f286ec407ee7f5d",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -172,9 +398,143 @@ exports[`renders solar-clean-002 / status / short 1`] = `
 {
   "height": 1920,
   "minFontSizeUsed": 34,
-  "sha256": "30304764c52cd8eb02a920d17b75c81e9e45f36068020b92f5268a8f4ca40476",
+  "sha256": "f8b76da936983f3b4c431c5bc41ba1b441f6b106b2c5eb5fb5819bfdf7b1393f",
   "warningCodes": [],
   "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / story / extreme 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 29,
+  "sha256": "561114d1015ca510ab7b3b0919c86b3a581c3e2c7fd5809ab2328400a874e00b",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / story / long 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 29,
+  "sha256": "36eea8e8bce58de6acc50c1af626cfae512940d3c9f2b8a3261564c8281595b7",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / story / normal 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "1030323c5b067c5596d567ccf1abd215417c3e31ee1ab53f1f286ec407ee7f5d",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-clean-002 / story / short 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "f8b76da936983f3b4c431c5bc41ba1b441f6b106b2c5eb5fb5819bfdf7b1393f",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / a4 / extreme 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 58,
+  "sha256": "f78e309d3a42b256540860efcf55ddbc9334d57ced83fe42a8d4f333d86d930b",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-dark-003 / a4 / long 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 56,
+  "sha256": "bb019509376cf32aa1856d20eb0a9d1e4593380eccfcb0cd6020fb05465151d0",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-dark-003 / a4 / normal 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 64,
+  "sha256": "951a60869cf4db159c3fbb72af33153d4b4430088889a6894498f052cb931975",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-dark-003 / a4 / short 1`] = `
+{
+  "height": 3508,
+  "minFontSizeUsed": 64,
+  "sha256": "f84e8477f8eecaf136f7da301a950146ea323522c6c726eeb093790a027ddc88",
+  "warningCodes": [],
+  "width": 2480,
+}
+`;
+
+exports[`renders solar-dark-003 / fb_post / extreme 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "70d9f3762621ae9f27a852f5978ee52f113cdf07ade028c814d65eb7012dbdf6",
+  "warningCodes": [],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-dark-003 / fb_post / long 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "dd359536e10d6d5cda80d46e66d189a623dbabf48972c426c3319f8a031141d8",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-dark-003 / fb_post / normal 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "d93d0b8fb5b223415996eab4a349ae6c49a6f71af9d39c273a19df0271b5ad78",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1200,
+}
+`;
+
+exports[`renders solar-dark-003 / fb_post / short 1`] = `
+{
+  "height": 630,
+  "minFontSizeUsed": 24,
+  "sha256": "8664d291c6c535fe4c06c765ce8e824c4985028d97cb8706df37930121c17b70",
+  "warningCodes": [],
+  "width": 1200,
 }
 `;
 
@@ -182,7 +542,7 @@ exports[`renders solar-dark-003 / ig_post / extreme 1`] = `
 {
   "height": 1080,
   "minFontSizeUsed": 21,
-  "sha256": "cc6964b4627975b12e6ae019b98666665633c173efcdd1466cd19023bf250519",
+  "sha256": "cfed169d2fbea544c316ff10adb1189330ef0dacbba1296a0f724b93853227d2",
   "warningCodes": [],
   "width": 1080,
 }
@@ -191,8 +551,8 @@ exports[`renders solar-dark-003 / ig_post / extreme 1`] = `
 exports[`renders solar-dark-003 / ig_post / long 1`] = `
 {
   "height": 1080,
-  "minFontSizeUsed": 23,
-  "sha256": "c24099a33797ca906a1aa664a99b402333374e43bcb16343eed43477353a5e13",
+  "minFontSizeUsed": 21,
+  "sha256": "5758829c511ec4dcc372b97178951416a63238002de155351cfa5ac0146a3a8c",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -203,8 +563,8 @@ exports[`renders solar-dark-003 / ig_post / long 1`] = `
 exports[`renders solar-dark-003 / ig_post / normal 1`] = `
 {
   "height": 1080,
-  "minFontSizeUsed": 24,
-  "sha256": "2b6de8020dcf2002be6b5a789cc43902427dc1e31f910ec169b5c7238127a593",
+  "minFontSizeUsed": 28,
+  "sha256": "023cc7f25310152130f92c783f77cc2d474463b541e5c60076204bba3dc6fb01",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -216,7 +576,7 @@ exports[`renders solar-dark-003 / ig_post / short 1`] = `
 {
   "height": 1080,
   "minFontSizeUsed": 28,
-  "sha256": "b72c9f935384670bfdc0a00ad2ad669fb86f61ba96e59ec19b53e04344d62bcd",
+  "sha256": "ded35d48ff3aeed2104584fcf3d307735bcb5791dbde9a86aac3009ccb85face",
   "warningCodes": [],
   "width": 1080,
 }
@@ -225,8 +585,8 @@ exports[`renders solar-dark-003 / ig_post / short 1`] = `
 exports[`renders solar-dark-003 / status / extreme 1`] = `
 {
   "height": 1920,
-  "minFontSizeUsed": 28,
-  "sha256": "993424a1189dd1ffda6cc49c3a915dac950d8ac76cda8a5edb724d25757a2d10",
+  "minFontSizeUsed": 29,
+  "sha256": "e190e20e80d7c1441a4ac467909eb6fdc8bdb2c5ae6e4a08870ea4c46698e59e",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -237,8 +597,8 @@ exports[`renders solar-dark-003 / status / extreme 1`] = `
 exports[`renders solar-dark-003 / status / long 1`] = `
 {
   "height": 1920,
-  "minFontSizeUsed": 28,
-  "sha256": "c30474d2e5230db57bb1841defe064a3dd2de1865245b92b21d5144039a40411",
+  "minFontSizeUsed": 29,
+  "sha256": "9194b6592ae6d4ee743bd4536c46de6efea32289956886c0514713619f40c585",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -249,8 +609,8 @@ exports[`renders solar-dark-003 / status / long 1`] = `
 exports[`renders solar-dark-003 / status / normal 1`] = `
 {
   "height": 1920,
-  "minFontSizeUsed": 28,
-  "sha256": "15a156c655e855b43f4a2b2bd451f5d00aed4253cd953042e4f399e827e1c771",
+  "minFontSizeUsed": 34,
+  "sha256": "e3409700bd93a711acc1c189cf251fa818e615898e9b5ef25a8974537a8a706e",
   "warningCodes": [
     "LOW_IMAGE_RESOLUTION",
   ],
@@ -262,7 +622,53 @@ exports[`renders solar-dark-003 / status / short 1`] = `
 {
   "height": 1920,
   "minFontSizeUsed": 34,
-  "sha256": "ffe1591b32b7340334cb4cbb8df4e1367170b5161da63587ce05274aed7c5549",
+  "sha256": "295f6069058e046904d16f0c8789eb1724056ceb8a6466622e03325045cc2836",
+  "warningCodes": [],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / story / extreme 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 29,
+  "sha256": "e190e20e80d7c1441a4ac467909eb6fdc8bdb2c5ae6e4a08870ea4c46698e59e",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / story / long 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 29,
+  "sha256": "9194b6592ae6d4ee743bd4536c46de6efea32289956886c0514713619f40c585",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / story / normal 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "e3409700bd93a711acc1c189cf251fa818e615898e9b5ef25a8974537a8a706e",
+  "warningCodes": [
+    "LOW_IMAGE_RESOLUTION",
+  ],
+  "width": 1080,
+}
+`;
+
+exports[`renders solar-dark-003 / story / short 1`] = `
+{
+  "height": 1920,
+  "minFontSizeUsed": 34,
+  "sha256": "295f6069058e046904d16f0c8789eb1724056ceb8a6466622e03325045cc2836",
   "warningCodes": [],
   "width": 1080,
 }
