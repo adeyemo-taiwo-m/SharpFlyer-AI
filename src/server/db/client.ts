@@ -5,6 +5,7 @@ import { createAppError, type AppError } from "@/lib/errors";
 import { err, ok, type Result } from "@/types/result";
 import type {
   AssetRow,
+  AiRequestRow,
   BrandProfileRow,
   CreditLedgerRow,
   FlyerRow,
@@ -32,6 +33,7 @@ export type CoreDataStoreState = {
   payments: Map<string, PaymentRow>;
   subscriptions: Map<string, SubscriptionRow>;
   webhookEvents: Map<string, WebhookEventRow>;
+  aiRequests: Map<string, AiRequestRow>;
   userLocks: Map<string, Promise<void>>;
 };
 
@@ -47,6 +49,7 @@ export function createCoreDataStoreState(): CoreDataStoreState {
     payments: new Map(),
     subscriptions: new Map(),
     webhookEvents: new Map(),
+    aiRequests: new Map(),
     userLocks: new Map(),
   };
 }
@@ -411,6 +414,38 @@ export class CoreRepository {
   updateFlyerVersion(): Result<never, AppError> {
     return err(
       createAppError("FORBIDDEN", "flyer_versions rows are immutable snapshots and cannot be updated."),
+    );
+  }
+
+  // --- AI request audit and cost records ---
+  insertAiRequest(
+    input: Omit<AiRequestRow, "id" | "created_at"> & { id?: string },
+  ): Result<AiRequestRow, AppError> {
+    if (this.actor.role !== "service_role") {
+      return err(createAppError("FORBIDDEN", "Only the server can record AI requests."));
+    }
+    const row: AiRequestRow = {
+      ...input,
+      id: input.id ?? randomUUID(),
+      created_at: nowIso(),
+    };
+    this.state.aiRequests.set(row.id, row);
+    return ok({ ...row });
+  }
+
+  listAiRequests(
+    userId: string,
+    options?: { kind?: AiRequestRow["kind"]; since?: string },
+  ): Result<AiRequestRow[], AppError> {
+    const allowed = forbidCrossUser(this.actor, userId);
+    if (!allowed.ok) return allowed;
+    return ok(
+      Array.from(this.state.aiRequests.values())
+        .filter((row) => row.user_id === userId)
+        .filter((row) => !options?.kind || row.kind === options.kind)
+        .filter((row) => !options?.since || row.created_at >= options.since)
+        .sort((a, b) => b.created_at.localeCompare(a.created_at))
+        .map((row) => ({ ...row })),
     );
   }
 

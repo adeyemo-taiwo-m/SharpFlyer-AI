@@ -16,6 +16,10 @@ export const FlyerContentSchema = z.object({
   address: z.string().max(240).optional(),
   logoAssetId: NonBlankString(240).optional(),
   productImageAssetIds: z.array(NonBlankString(240)).default([]),
+  imagePosition: z.object({
+    x: z.number().min(-1).max(1),
+    y: z.number().min(-1).max(1),
+  }).default({ x: 0, y: 0 }),
   themeId: NonBlankString(120),
   format: FormatSchema,
 }).superRefine((content, context) => {

@@ -10,8 +10,26 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: "SharpFlyer AI",
   description: "Pick a design. Add your details. Export a flyer you can post today.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/apple-icon.svg",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "SharpFlyer AI",
+    title: "SharpFlyer AI",
+    description: "Pick a design. Add your details. Export a flyer you can post today.",
+    images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "SharpFlyer AI flyer creation" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SharpFlyer AI",
+    description: "Pick a design. Add your details. Export a flyer you can post today.",
+    images: ["/og-image.svg"],
+  },
 };
 
 const themeScript = `(() => {

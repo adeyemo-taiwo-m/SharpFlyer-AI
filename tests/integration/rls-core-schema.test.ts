@@ -17,6 +17,7 @@ const sampleContent: FlyerContent = {
   phone: "+2348031234567",
   businessName: "BrightPower Solutions",
   productImageAssetIds: [],
+  imagePosition: { x: 0, y: 0 },
   themeId: "navy-gold",
   format: "ig_post",
 };

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, Check, ChevronDown, ChevronUp, CircleAlert, Loader2, RefreshCw } from "lucide-react";
+import { AlertCircle, Check, ChevronDown, ChevronUp, CircleAlert, Loader2, MessageSquare, RefreshCw } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,6 +12,7 @@ import {
   requestAssetUploadAction,
   saveDraftAction,
 } from "@/app/actions/flyers";
+import { suggestCopyAction } from "@/app/actions/ai";
 import { ExportSheet } from "@/components/sharpflyer/export-sheet";
 import { UploadDropzone, type UploadState } from "@/components/sharpflyer/upload-dropzone";
 import { useAppShell } from "@/components/sharpflyer/app-shell";
@@ -80,6 +81,9 @@ export function FlyerEditor({
   const [warnings, setWarnings] = React.useState<RenderIssue[]>([]);
   const [renderIssues, setRenderIssues] = React.useState<RenderIssue[]>([]);
   const [generating, setGenerating] = React.useState(false);
+  const [copySuggestions, setCopySuggestions] = React.useState<Array<{ headline: string; body: string; cta: string }>>([]);
+  const [copyWorking, setCopyWorking] = React.useState(false);
+  const [copyError, setCopyError] = React.useState<string | null>(null);
   const [offline, setOffline] = React.useState(() => typeof navigator !== "undefined" && !navigator.onLine);
   const [previewOpen, setPreviewOpen] = React.useState(true);
   const [logoUpload, setLogoUpload] = React.useState<UploadState>(() => initialUploadState(flyer.content.logoAssetId, "Logo saved"));
@@ -164,6 +168,26 @@ export function FlyerEditor({
     setPreviewUrl(result.value.previewUrl);
     setPreviewSignature(contentSignature(values));
     setWarnings(result.value.warnings);
+  }
+
+  async function requestCopySuggestions() {
+    setCopyWorking(true);
+    setCopyError(null);
+    const result = await suggestCopyAction({
+      flyerId: flyer.id,
+      businessType: template.meta.category,
+      offerFacts: bodyValue || "Create a clear promotional message for this offer.",
+      tone: "clear",
+      headlineMaxLength,
+      bodyMaxLength,
+    });
+    setCopyWorking(false);
+    if (!result.ok) {
+      setCopySuggestions([]);
+      setCopyError(result.error.message);
+      return;
+    }
+    setCopySuggestions(result.value.suggestions);
   }
 
   function setPrice(field: "price" | "oldPrice", raw: string) {
@@ -356,6 +380,34 @@ export function FlyerEditor({
               }}
             />
           </Field>
+          <div className="flex flex-col gap-3 rounded-2xl bg-surface p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-callout text-foreground">Need a starting point?</p>
+                <p className="mt-1 text-caption text-muted-foreground">Suggestions are optional and never change your flyer until you choose one.</p>
+              </div>
+              <MessageSquare className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+            </div>
+            <Button type="button" variant="secondary" size="sm" className="self-start" onClick={() => void requestCopySuggestions()} disabled={copyWorking}>
+              {copyWorking && <Loader2 className="animate-spin" />}
+              {copyWorking ? "Thinking…" : "Suggest headlines"}
+            </Button>
+            {copyError && <p role="alert" className="text-caption text-danger-text">{copyError}</p>}
+            {copySuggestions.length > 0 && (
+              <div className="flex flex-col gap-2" aria-label="Headline suggestions">
+                {copySuggestions.map((suggestion, index) => (
+                  <button key={`${suggestion.headline}-${index}`} type="button" className="flex w-full flex-col gap-1 rounded-xl bg-background p-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring hover:bg-surface-2" onClick={() => setValue("headline", suggestion.headline, { shouldDirty: true, shouldValidate: true })}>
+                    <span className="text-callout text-foreground">{suggestion.headline}</span>
+                    <span className="text-caption text-muted-foreground">{suggestion.headline.length}/{headlineMaxLength} characters · {suggestion.body}</span>
+                  </button>
+                ))}
+                <div className="flex flex-wrap gap-3">
+                  <Button type="button" variant="ghost" size="sm" onClick={() => void requestCopySuggestions()} disabled={copyWorking}>Try again</Button>
+                  <Button type="button" variant="ghost" size="sm" onClick={() => setCopySuggestions([])}>Write my own</Button>
+                </div>
+              </div>
+            )}
+          </div>
           <Field label="Business name" htmlFor="business-name" error={errors.businessName?.message} helper={`${businessNameValue.length}/${businessNameMaxLength} characters`}>
             <Input id="business-name" maxLength={businessNameMaxLength} {...register("businessName")} />
           </Field>

@@ -16,6 +16,14 @@ export type PaymentProduct = "credit_pack" | "subscription";
 export type PaymentStatus = "pending" | "succeeded" | "failed" | "abandoned";
 export type SubscriptionStatus = "incomplete" | "active" | "past_due" | "grace" | "cancelled";
 export type WebhookEventStatus = "pending" | "processed" | "ignored" | "failed";
+export type AiRequestKind = "copy_suggestions" | "background_removal";
+export type AiRequestStatus =
+  | "succeeded"
+  | "failed"
+  | "timed_out"
+  | "refused"
+  | "cache_hit"
+  | "unavailable";
 
 export type ProfileRow = {
   id: string;
@@ -155,4 +163,20 @@ export type WebhookEventRow = {
   payload: Record<string, unknown>;
   received_at: string;
   processed_at: string | null;
+};
+
+export type AiRequestRow = {
+  id: string;
+  user_id: string;
+  flyer_id: string | null;
+  kind: AiRequestKind;
+  provider: string;
+  model: string | null;
+  usage: Record<string, unknown>;
+  cost_usd: number | null;
+  pricing_checked_at: string | null;
+  latency_ms: number;
+  status: AiRequestStatus;
+  error_code: string | null;
+  created_at: string;
 };

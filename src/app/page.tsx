@@ -1,13 +1,40 @@
-export default function Home() {
+import Link from "next/link";
+
+import { PublicFooter, PublicHeader } from "@/components/sharpflyer/public-header";
+import { PublicFlyerShowcase } from "@/components/sharpflyer/public-flyer-showcase";
+import { PublicTemplateStrip } from "@/components/sharpflyer/public-template-strip";
+import { Button } from "@/components/ui/button";
+import { CREDIT_PACKS, SUBSCRIPTION_PLANS } from "@/config/pricing";
+import { formatNaira } from "@/lib/money";
+import { listTemplates } from "@/server/templates";
+
+export default async function Home() {
+  const templatesRes = await listTemplates();
+  const templates = templatesRes.ok ? templatesRes.value : [];
+  const showcaseTemplate = templates.find((template) => template.id === "solar-bold-001") ?? templates[0];
+
   return (
-    <main className="flex min-h-dvh items-center justify-center p-6">
-      <div className="w-full max-w-2xl rounded-2xl bg-surface p-8 shadow-2 sm:p-12">
-        <p className="text-callout text-brand-text">SharpFlyer AI</p>
-        <h1 className="mt-4 max-w-xl text-display">Sharp flyers, sharp sharp.</h1>
-        <p className="mt-6 max-w-prose text-body-lg text-muted-foreground">
-          Pick a design. Add your details. Export a flyer you can post today.
-        </p>
-      </div>
-    </main>
+    <div className="min-h-dvh bg-background text-foreground">
+      <PublicHeader />
+      <main>
+        <section className="mx-auto flex w-full max-w-[1200px] flex-col gap-10 px-5 py-14 md:px-8 md:py-20 lg:flex-row lg:items-center lg:gap-14 lg:px-10 lg:py-24">
+          <div className="flex min-w-0 flex-1 flex-col items-start gap-6"><p className="text-callout text-brand-text">Sharp flyers, sharp sharp.</p><h1 className="text-display-xl max-w-2xl">Professional flyers, ready to post.</h1><p className="max-w-xl text-body-lg text-muted-foreground">Pick a real design, add your offer, and export a polished flyer with your price and phone number kept accurate.</p><div className="flex flex-wrap gap-3"><Button asChild variant="brand" size="xl"><Link href="/auth?next=%2Fapp%2Ftemplates">Get started</Link></Button><Button asChild variant="secondary" size="xl"><Link href="#templates">See the designs</Link></Button></div></div>
+          <div className="min-w-0 flex-1">{showcaseTemplate ? <PublicFlyerShowcase templateId={showcaseTemplate.id} templateTitle={showcaseTemplate.title} format="ig_post" /> : <div className="rounded-[28px] bg-surface p-8 text-small text-muted-foreground">The live template example is loading.</div>}</div>
+        </section>
+
+        <section className="border-y border-border bg-surface" aria-labelledby="how-heading"><div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-5 py-14 md:px-8 md:py-16 lg:px-10"><div className="flex flex-col gap-2"><p className="text-caption text-brand-text">A short path to a useful flyer</p><h2 id="how-heading" className="text-h2">How it works</h2></div><div className="flex flex-wrap gap-5">{[["01", "Choose a design", "Start with a real template made for the format you want to post."], ["02", "Add your details", "Enter the headline, offer, price, phone, logo, and images that belong to your business."], ["03", "Review and export", "Check the rendered preview, then save a PNG or JPG when it is ready."]].map(([number, title, body]) => <article key={number} className="flex min-w-[240px] flex-1 basis-full flex-col gap-3 rounded-2xl bg-background p-5 md:basis-[calc(33.333%-0.84rem)]"><span className="text-caption text-brand-text">{number}</span><h3 className="text-h3">{title}</h3><p className="text-small text-muted-foreground">{body}</p></article>)}</div></div></section>
+
+        <section id="templates" className="mx-auto flex w-full max-w-[1200px] flex-col gap-7 px-5 py-14 md:px-8 md:py-16 lg:px-10" aria-labelledby="templates-heading"><div className="flex flex-wrap items-end justify-between gap-4"><div className="flex flex-col gap-2"><p className="text-caption text-brand-text">Real templates, not placeholders</p><h2 id="templates-heading" className="text-h2">Start with a design you like</h2></div><Button asChild variant="link"><Link href="/app/templates">Browse templates</Link></Button></div>{templates.length > 0 ? <PublicTemplateStrip templates={templates} /> : <p className="rounded-2xl bg-surface p-5 text-small text-muted-foreground">Templates are being prepared. Check back soon.</p>}</section>
+
+        <section className="border-y border-border bg-surface" aria-labelledby="accuracy-heading"><div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-5 py-14 md:px-8 md:py-16 lg:flex-row lg:items-center lg:px-10"><div className="flex flex-1 flex-col gap-4"><p className="text-caption text-brand-text">Accuracy promise</p><h2 id="accuracy-heading" className="text-h2">Your important details stay yours.</h2><p className="max-w-xl text-body text-muted-foreground">SharpFlyer renders business-critical details from structured fields. A model may help with optional wording, but it does not rewrite your price, phone number, business name, address, or logo.</p><div className="flex flex-col gap-2 rounded-2xl bg-background p-5"><span className="text-caption text-muted-foreground">Example structured fields</span><span className="tabular text-callout">Price: ₦850,000</span><span className="tabular text-callout">Phone: +234 803 123 4567</span></div></div><div className="flex-1 rounded-[28px] bg-background p-4 sm:p-5"><p className="mb-4 text-caption text-muted-foreground">The same renderer turns those fields into the flyer.</p>{showcaseTemplate && <PublicFlyerShowcase templateId={showcaseTemplate.id} templateTitle={showcaseTemplate.title} format="ig_post" />}</div></div></section>
+
+        <section className="mx-auto flex w-full max-w-[1200px] flex-col gap-7 px-5 py-14 md:px-8 md:py-16 lg:px-10" aria-labelledby="pricing-heading"><div className="flex flex-col gap-2"><p className="text-caption text-brand-text">Current offers</p><h2 id="pricing-heading" className="text-h2">Start free, then add credits when you need them.</h2><p className="max-w-2xl text-body text-muted-foreground">These amounts are proposals for the paid pilot and may change after validation.</p></div><div className="flex flex-wrap gap-5">{CREDIT_PACKS.slice(0, 2).map((pack) => <div key={pack.id} className="flex min-w-[240px] flex-1 basis-full flex-col gap-3 rounded-2xl bg-surface p-5 md:basis-[calc(50%-0.625rem)]"><h3 className="text-h3">{pack.name}</h3><p className="text-small text-muted-foreground">{pack.credits} exports</p><p className="text-price tabular">{formatNaira(pack.priceKobo)} <span className="text-small font-normal text-muted-foreground">proposal</span></p></div>)}{SUBSCRIPTION_PLANS.slice(0, 1).map((plan) => <div key={plan.id} className="flex min-w-[240px] flex-1 basis-full flex-col gap-3 rounded-2xl bg-surface p-5 md:basis-[calc(50%-0.625rem)]"><h3 className="text-h3">{plan.name}</h3><p className="text-small text-muted-foreground">{plan.monthlyCredits} credits each month</p><p className="text-price tabular">{formatNaira(plan.priceMonthlyKobo)} <span className="text-small font-normal text-muted-foreground">/ month proposal</span></p></div>)}</div><Button asChild variant="secondary" className="self-start"><Link href="/pricing">See pricing details</Link></Button></section>
+
+        <section className="border-y border-border bg-surface" aria-labelledby="faq-heading"><div className="mx-auto flex w-full max-w-[860px] flex-col gap-7 px-5 py-14 md:px-8 md:py-16"><div className="flex flex-col gap-2"><p className="text-caption text-brand-text">Questions</p><h2 id="faq-heading" className="text-h2">FAQ</h2></div><div className="flex flex-col">{[["Can I change the details later?", "Yes. Your draft stays editable, and a new preview is rendered after you change the fields."], ["Does AI change my price or phone number?", "No. Critical business details are entered as structured fields and rendered directly. Optional copy suggestions are separate and require your tap to insert."], ["What happens if I run out of credits?", "Your draft is preserved. The app shows the credit sheet so you can review the cost and buy credits."], ["Are the listed prices final?", "No. The pricing page labels the current values as proposals for the paid pilot while they are being validated."]].map(([question, answer]) => <details key={question} className="border-b border-border py-5 first:border-t"><summary className="cursor-pointer list-none text-callout font-semibold">{question}</summary><p className="mt-3 max-w-2xl text-small text-muted-foreground">{answer}</p></details>)}</div></div></section>
+
+        <section className="mx-auto flex w-full max-w-[1200px] flex-col items-start gap-5 px-5 py-16 md:px-8 md:py-20 lg:px-10"><h2 className="max-w-2xl text-h2">Make the next flyer easier to get right.</h2><p className="max-w-xl text-body-lg text-muted-foreground">Choose a design, keep your business details structured, and export when the preview looks right.</p><Button asChild variant="brand" size="xl"><Link href="/auth?next=%2Fapp%2Ftemplates">Get started</Link></Button></section>
+      </main>
+      <PublicFooter />
+    </div>
   );
 }

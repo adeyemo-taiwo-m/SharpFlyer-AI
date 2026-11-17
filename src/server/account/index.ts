@@ -156,6 +156,9 @@ export async function deleteAccount(options: AccountServiceOptions = {}): Promis
   for (const [subscriptionId, subscription] of state.subscriptions.entries()) {
     if (subscription.user_id === userId) state.subscriptions.delete(subscriptionId);
   }
+  for (const [requestId, request] of state.aiRequests.entries()) {
+    if (request.user_id === userId) state.aiRequests.delete(requestId);
+  }
   state.creditLedger = state.creditLedger.filter((entry) => entry.user_id !== userId);
   state.brandProfiles.delete(userId);
   state.profiles.delete(userId);

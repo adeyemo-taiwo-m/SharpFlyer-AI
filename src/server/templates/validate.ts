@@ -20,6 +20,7 @@ export type ValidatedTemplate = {
 export type TemplateValidationOptions = {
   publishedHashes?: Record<string, string>;
   requirePublishedHashes?: boolean;
+  expectedId?: string;
 };
 
 export type TemplateValidationReport = {
@@ -104,15 +105,19 @@ export async function validateTemplateDirectory(templateDirectory: string, optio
   }
 
   const template = parsed.data;
-  const folderId = basename(dirname(templatePath));
+  const folderId = options.expectedId ?? basename(dirname(templatePath));
   if (template.meta.id !== folderId) {
     issues.push({ path: relativeTemplatePath, message: `meta.id ${template.meta.id} must match the template directory ${folderId}.` });
   }
 
   issues.push(...validateTemplateDefinition(template).map((issue) => ({ path: relativeTemplatePath, message: `${issue.path}: ${issue.message}` })));
 
-  const assetsDirectory = join(templateDirectory, "assets");
-  const assetFiles = await listFiles(assetsDirectory).catch(() => [] as string[]);
+  const assetDirectories = [join(templateDirectory, "assets")];
+  if (assetDirectories[0] && !(await fileExists(assetDirectories[0]))) {
+    const parentAssets = join(dirname(templateDirectory), "assets");
+    if (await fileExists(parentAssets)) assetDirectories.push(parentAssets);
+  }
+  const assetFiles = (await Promise.all(assetDirectories.map((directory) => listFiles(directory).catch(() => [] as string[])))).flat();
   const fontAssetNames = assetFiles
     .filter((asset) => /\.(woff2?|ttf|otf)$/i.test(asset))
     .map((asset) => normalizeAssetName(basename(asset)));
@@ -156,12 +161,46 @@ export async function validateTemplates(templateRoot: string, options: TemplateV
     return { entries: 0, templates, issues: [{ path: templateRoot, message: error instanceof Error ? error.message : String(error) }] };
   }
 
-  const directories = entries.filter((entry) => entry.isDirectory()).sort((a, b) => a.name.localeCompare(b.name));
+  const directories = entries.filter((entry) => entry.isDirectory() && !entry.name.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name));
+  let discovered = 0;
   for (const entry of directories) {
-    const report = await validateTemplateDirectory(join(templateRoot, entry.name), options);
-    templates.push(...report.templates);
-    issues.push(...report.issues);
+    const templateId = entry.name;
+    const templateDirectories = await findTemplateDirectories(join(templateRoot, entry.name));
+    for (const directory of templateDirectories) {
+      const report = await validateTemplateDirectory(directory, { ...options, expectedId: templateId });
+      templates.push(...report.templates);
+      issues.push(...report.issues);
+      discovered += report.entries;
+    }
   }
 
-  return { entries: directories.length, templates, issues };
+  return { entries: discovered, templates, issues };
+}
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await readFile(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function findTemplateDirectories(root: string): Promise<string[]> {
+  const result: string[] = [];
+  async function visit(directory: string): Promise<void> {
+    try {
+      const entries = await readdir(directory, { withFileTypes: true });
+      if (entries.some((entry) => entry.isFile() && entry.name === "template.json")) result.push(directory);
+      for (const entry of entries) {
+        if (entry.isDirectory() && (directory === root || /^v\d+$/.test(entry.name) || /^\d+$/.test(entry.name))) {
+          await visit(join(directory, entry.name));
+        }
+      }
+    } catch {
+      // The directory is reported by the caller if its template is missing.
+    }
+  }
+  await visit(root);
+  return result.sort((a, b) => a.localeCompare(b));
 }

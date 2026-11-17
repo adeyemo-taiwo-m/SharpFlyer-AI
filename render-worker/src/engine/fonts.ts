@@ -1,5 +1,5 @@
 import { readFile, readdir } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 
 import type { Font } from "satori";
 
@@ -19,7 +19,14 @@ async function listFiles(directory: string): Promise<string[]> {
 }
 
 export async function findFontPath(templateDirectory: string, fontName: string, weight: number): Promise<string> {
-  const files = await listFiles(join(templateDirectory, "assets"));
+  const directories = [join(templateDirectory, "assets")];
+  let parent = dirname(templateDirectory);
+  for (let depth = 0; depth < 2; depth += 1) {
+    directories.push(join(parent, "assets"));
+    parent = dirname(parent);
+  }
+  const fileLists = await Promise.all(directories.map((directory) => listFiles(directory).catch(() => [] as string[])));
+  const files = fileLists.flat();
   const name = fontName.toLowerCase().replace(/[^a-z0-9]/g, "");
   const matching = files.filter((file) => file.toLowerCase().replace(/[^a-z0-9]/g, "").includes(name) && /\.(woff2?|ttf|otf)$/i.test(file));
   const weighted = matching.find((file) => file.includes(`-${weight}.`)) ?? matching[0];

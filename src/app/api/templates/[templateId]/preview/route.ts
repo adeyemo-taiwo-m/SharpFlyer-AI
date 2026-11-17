@@ -14,6 +14,7 @@ export async function GET(
   const { templateId } = await context.params;
   const formatParam = request.nextUrl.searchParams.get("format");
   const themeParam = request.nextUrl.searchParams.get("theme");
+  const sample = request.nextUrl.searchParams.get("sample") === "before" ? "before" : "after";
 
   const loadedRes = await loadTemplate(templateId);
   if (!loadedRes.ok) {
@@ -31,7 +32,7 @@ export async function GET(
       ? themeParam
       : template.palettes[0]!.id;
 
-  const cacheKey = `${template.meta.id}@${template.meta.version}:${format}:${themeId}`;
+  const cacheKey = `${template.meta.id}@${template.meta.version}:${format}:${themeId}:${sample}`;
   const cached = previewCache.get(cacheKey);
   if (cached) {
     return new NextResponse(new Uint8Array(cached), {
@@ -45,18 +46,23 @@ export async function GET(
 
   const renderClient = getDefaultRenderClient();
   const sampleContent = {
-    headline: "5kVA Inverter + Tubeless Battery Bundle",
-    body: "Reliable backup power for home and office. Installation included.",
+    headline: sample === "before" ? "Your offer here" : "5kVA Inverter + Tubeless Battery Bundle",
+    body: sample === "before" ? "Add a clear offer and your business details." : "Reliable backup power for home and office. Installation included.",
     price: 85_000_000, // ₦850,000
     oldPrice: 95_000_000, // ₦950,000
     currency: "NGN",
-    phone: "+2348031234567",
-    businessName: "Lagos Solar Hub",
-    address: "14 Allen Avenue, Ikeja, Lagos",
+    phone: sample === "before" ? "+2348012345678" : "+2348031234567",
+    businessName: sample === "before" ? "Your business" : "Lagos Solar Hub",
+    address: sample === "before" ? "Your location" : "14 Allen Avenue, Ikeja, Lagos",
     productImageAssetIds: [],
+    imagePosition: { x: 0, y: 0 },
     themeId,
     format,
   };
+  if (sample === "before") {
+    delete (sampleContent as { price?: number; oldPrice?: number }).price;
+    delete (sampleContent as { price?: number; oldPrice?: number }).oldPrice;
+  }
 
   const renderRes = await renderClient.render({
     jobId: `template-thumb-${createHash("md5").update(cacheKey).digest("hex")}`,

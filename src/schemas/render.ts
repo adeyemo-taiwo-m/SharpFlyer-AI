@@ -7,6 +7,7 @@ const NonBlankString = z.string().min(1);
 
 export const RenderRequestSchema = z.object({
   jobId: NonBlankString.max(200),
+  correlationId: NonBlankString.max(200).optional(),
   templateId: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   templateVersion: z.number().int().positive(),
   format: FormatSchema,

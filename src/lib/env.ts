@@ -15,6 +15,7 @@ const serverEnvSchema = publicEnvSchema.extend({
   LLM_API_KEY: z.string().min(1).optional(),
   IMAGE_API_KEY: z.string().min(1).optional(),
   BG_REMOVAL_API_KEY: z.string().min(1).optional(),
+  AI_DAILY_COST_ALERT_USD: z.string().regex(/^\d+(\.\d+)?$/).optional(),
   RENDER_WORKER_URL: z.string().url().optional(),
   RENDER_WORKER_SECRET: z.string().min(1).optional(),
   OTP_PROVIDER_KEY: z.string().min(1).optional(),

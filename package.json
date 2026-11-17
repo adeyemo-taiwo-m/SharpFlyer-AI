@@ -10,6 +10,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:ai-eval": "vitest run tests/ai-eval",
     "test:e2e": "playwright test tests/e2e --pass-with-no-tests",
     "test:visual": "vitest run --config vitest.visual.config.mjs tests/visual",
     "templates:validate": "tsx scripts/templates-validate.ts",

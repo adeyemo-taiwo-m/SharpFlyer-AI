@@ -91,6 +91,7 @@ function stableContentSignature(
     address: content.address ?? "",
     logoAssetId: content.logoAssetId ?? null,
     productImageAssetIds: content.productImageAssetIds,
+    imagePosition: content.imagePosition,
     themeId: content.themeId,
     format: content.format,
     fileType,
@@ -191,6 +192,7 @@ export async function createDraftFromTemplate(
     address: brandRes.ok && brandRes.value.address ? brandRes.value.address : "Ikeja, Lagos",
     logoAssetId: brandRes.ok && brandRes.value.logo_asset_id ? brandRes.value.logo_asset_id : undefined,
     productImageAssetIds: [],
+    imagePosition: { x: 0, y: 0 },
     themeId: chosenThemeId,
     format: chosenFormat,
   };
@@ -239,7 +241,7 @@ export async function getFlyerDraft(
   if (!flyerRes.ok) return flyerRes;
   const flyer = flyerRes.value;
 
-  const templateRes = await loadTemplate(flyer.template_id, options.templateRoot);
+  const templateRes = await loadTemplate(flyer.template_id, options.templateRoot, flyer.template_version);
   if (!templateRes.ok) return templateRes;
 
   let previewUrl: string | null = null;
@@ -290,7 +292,7 @@ export async function saveDraft(
   const existingRes = repo.getFlyer(flyerId);
   if (!existingRes.ok) return existingRes;
 
-  const templateRes = await loadTemplate(existingRes.value.template_id, options.templateRoot);
+  const templateRes = await loadTemplate(existingRes.value.template_id, options.templateRoot, existingRes.value.template_version);
   if (!templateRes.ok) return templateRes;
 
   const { template } = templateRes.value;

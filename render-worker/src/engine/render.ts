@@ -146,7 +146,7 @@ export async function renderFlyer(request: RenderRequest, options: RenderOptions
   const started = Date.now();
   const warnings: RenderIssue[] = [];
   const errors: RenderIssue[] = [];
-  const loaded = await loadTemplate(request.templateId, options.templateRoot);
+  const loaded = await loadTemplate(request.templateId, options.templateRoot, request.templateVersion);
 
   if (!loaded.ok) {
     return { ok: false, warnings, errors: [renderIssue(loaded.error.code, loaded.error.message)], metrics: { durationMs: Date.now() - started, minFontSizeUsed: 0 } };
@@ -247,10 +247,14 @@ export async function renderFlyer(request: RenderRequest, options: RenderOptions
   const children: ReactNode[] = [];
   for (const decor of template.decor) children.push(createElement("div", { key: `decor-${children.length}`, style: decorStyle(template, decor, palette) }));
   for (const image of images) {
+    const position = image.field === "productImage" ? request.content.imagePosition : undefined;
+    const objectPosition = position
+      ? `${50 + position.x * 35}% ${50 + position.y * 35}%`
+      : "center";
     children.push(createElement("img", {
       key: image.field,
       src: image.source,
-      style: { position: "absolute", left: image.region.x, top: image.region.y, width: image.region.w, height: image.region.h, objectFit: image.region.fit === "cover" || image.region.fit === "smart-crop" ? "cover" : "contain", objectPosition: "center", boxShadow: image.region.shadow ? "0 16px 32px rgba(0,0,0,0.18)" : undefined } as CSSProperties,
+      style: { position: "absolute", left: image.region.x, top: image.region.y, width: image.region.w, height: image.region.h, objectFit: image.region.fit === "cover" || image.region.fit === "smart-crop" ? "cover" : "contain", objectPosition, boxShadow: image.region.shadow ? "0 16px 32px rgba(0,0,0,0.18)" : undefined } as CSSProperties,
     }));
   }
   for (const field of Object.values(fields)) {
