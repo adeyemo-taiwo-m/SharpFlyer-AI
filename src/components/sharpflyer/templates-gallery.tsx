@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { CircleAlert, RotateCcw, Search, X } from "lucide-react";
+import Link from "next/link";
 
 import { TemplateTile } from "@/components/sharpflyer/template-tile";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -96,6 +97,9 @@ export function TemplatesGallery({
         <p className="text-body text-muted-foreground">
           Start with a design, then add your business details.
         </p>
+        <Button asChild type="button" variant="secondary" className="self-start">
+          <Link href="/app/create/ai">Create with AI</Link>
+        </Button>
       </div>
 
       <div className="flex flex-col gap-4">

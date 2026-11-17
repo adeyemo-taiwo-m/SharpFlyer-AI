@@ -6,6 +6,12 @@ This document defines how AI is used in SharpFlyer AI: which features exist, how
 
 > **Read the rule first.** All AI calls must pass through `src/server/ai`, validate output with Zod, and leave the user able to finish a flyer without AI.
 
+## Implementation status (Phase 12)
+
+Mode B is implemented behind the provider-agnostic service layer. `designFromPrompt` and `reviseDesign` accept structured, Zod-validated inputs, restrict output to approved archetypes, palettes, fonts, field references, and emphasis values, and log each provider attempt. `renderDesignSpec` resolves the approved selection and delegates to the existing render client, so the render worker remains the source of truth for validation and drawing. The UI is available at `/app/create/ai`; provider configuration remains optional and the template gallery/editor remain the fallback.
+
+The PRD describes these items in section 6.1 and section 7.4, and the Phase 12 plan in `docs/IMPLEMENTATION_PLAN.md`; the repository's PRD currently contains no concrete `AI-xxx` IDs for Mode B, so none are invented here.
+
 **Conventions.** **[V]** validated, **[H]** hypothesis to test, **[U]** unknown or undecided. Every number in this document marked **[H]** or **[U]** is a proposal, not a decided fact. Requirement IDs (AI-xxx) are in `docs/PRD.md`; look them up there and quote them in plans. This document does not invent IDs.
 
 ---

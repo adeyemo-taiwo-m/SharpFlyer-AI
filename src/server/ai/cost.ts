@@ -33,6 +33,8 @@ export function summarizeAiCosts(
   const byKind = {
     copy_suggestions: rows.filter((row) => row.kind === "copy_suggestions"),
     background_removal: rows.filter((row) => row.kind === "background_removal"),
+    design_specs: rows.filter((row) => row.kind === "design_specs"),
+    design_revisions: rows.filter((row) => row.kind === "design_revisions"),
   };
   const totalCostUsd = sumKnownCost(rows);
   const threshold = alertThreshold();
@@ -42,6 +44,8 @@ export function summarizeAiCosts(
     byKind: {
       copy_suggestions: { requests: byKind.copy_suggestions.length, costUsd: sumKnownCost(byKind.copy_suggestions) },
       background_removal: { requests: byKind.background_removal.length, costUsd: sumKnownCost(byKind.background_removal) },
+      design_specs: { requests: byKind.design_specs.length, costUsd: sumKnownCost(byKind.design_specs) },
+      design_revisions: { requests: byKind.design_revisions.length, costUsd: sumKnownCost(byKind.design_revisions) },
     },
     totalCostUsd,
     alertThresholdUsd: threshold,

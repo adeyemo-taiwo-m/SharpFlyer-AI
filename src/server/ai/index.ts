@@ -224,4 +224,6 @@ export function resetBackgroundRemovalCache(): void {
 }
 
 export { summarizeAiCosts } from "@/server/ai/cost";
+export { applyDesignRevision, designFromPrompt, renderDesignSpec, reviseDesign } from "@/server/ai/design";
+export type { DesignFromPromptResult, DesignRevisionResult, RenderDesignOptions } from "@/server/ai/design";
 export type { BackgroundRemovalProvider, ImageProvider, LLMProvider } from "@/server/ai/providers";

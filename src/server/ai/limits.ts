@@ -38,6 +38,8 @@ export const DEFAULT_AI_LIMITS: Record<AiRequestKind, AiLimitConfig> = {
     maxPerIp: 20,
     maxPerFlyer: 3,
   },
+  design_specs: { userWindowMs: 24 * 60 * 60 * 1000, ipWindowMs: 60 * 1000, flyerWindowMs: 24 * 60 * 60 * 1000, maxPerUser: 5, maxPerIp: 10, maxPerFlyer: 3 },
+  design_revisions: { userWindowMs: 24 * 60 * 60 * 1000, ipWindowMs: 60 * 1000, flyerWindowMs: 24 * 60 * 60 * 1000, maxPerUser: 10, maxPerIp: 20, maxPerFlyer: 5 },
 };
 
 const userCounters = new Map<string, Counter>();

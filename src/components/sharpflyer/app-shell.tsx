@@ -64,6 +64,9 @@ function resolvePageTitle(pathname: string): {
   backHref?: string;
   isEditor: boolean;
 } {
+  if (pathname === "/app/create/ai") {
+    return { title: "Create with AI", backHref: "/app/templates", isEditor: false };
+  }
   if (pathname.startsWith("/app/create/")) {
     return { title: "Edit flyer", backHref: "/app/templates", isEditor: true };
   }

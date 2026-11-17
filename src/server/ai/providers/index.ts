@@ -1,8 +1,8 @@
 import { createAppError, type AppError } from "@/lib/errors";
 import { err, type Result } from "@/types/result";
-import type { BackgroundRemovalGeneration, CopyGeneration, ImageGeneration, LLMProvider, ImageProvider, BackgroundRemovalProvider } from "@/server/ai/providers/types";
+import type { BackgroundRemovalGeneration, CopyGeneration, DesignGeneration, ImageGeneration, LLMProvider, ImageProvider, BackgroundRemovalProvider, RevisionGeneration } from "@/server/ai/providers/types";
 
-export type { BackgroundRemovalGeneration, CopyGeneration, ImageGeneration, LLMProvider, ImageProvider, BackgroundRemovalProvider } from "@/server/ai/providers/types";
+export type { BackgroundRemovalGeneration, CopyGeneration, DesignGeneration, ImageGeneration, LLMProvider, ImageProvider, BackgroundRemovalProvider, RevisionGeneration } from "@/server/ai/providers/types";
 
 class UnavailableLLMProvider implements LLMProvider {
   readonly name = "unconfigured";
@@ -10,6 +10,14 @@ class UnavailableLLMProvider implements LLMProvider {
 
   async generateCopy(): Promise<Result<CopyGeneration, AppError>> {
     return err(createAppError("AI_UNAVAILABLE", "Copy suggestions are not configured yet. Write your own copy."));
+  }
+
+  async generateDesign(): Promise<Result<DesignGeneration, AppError>> {
+    return err(createAppError("AI_UNAVAILABLE", "Prompt-to-design is not configured yet. You can start with a template."));
+  }
+
+  async generateRevision(): Promise<Result<RevisionGeneration, AppError>> {
+    return err(createAppError("AI_UNAVAILABLE", "Natural-language revisions are not configured yet. You can edit the design fields."));
   }
 }
 

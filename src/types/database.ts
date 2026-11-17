@@ -16,7 +16,7 @@ export type PaymentProduct = "credit_pack" | "subscription";
 export type PaymentStatus = "pending" | "succeeded" | "failed" | "abandoned";
 export type SubscriptionStatus = "incomplete" | "active" | "past_due" | "grace" | "cancelled";
 export type WebhookEventStatus = "pending" | "processed" | "ignored" | "failed";
-export type AiRequestKind = "copy_suggestions" | "background_removal";
+export type AiRequestKind = "copy_suggestions" | "background_removal" | "design_specs" | "design_revisions";
 export type AiRequestStatus =
   | "succeeded"
   | "failed"
