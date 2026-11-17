@@ -10,6 +10,8 @@ const serverEnvSchema = publicEnvSchema.extend({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   PAYSTACK_SECRET_KEY: z.string().min(1).optional(),
   PAYSTACK_WEBHOOK_SECRET: z.string().min(1).optional(),
+  PAYSTACK_STARTER_PLAN_CODE: z.string().min(1).optional(),
+  PAYSTACK_BUSINESS_PLAN_CODE: z.string().min(1).optional(),
   LLM_API_KEY: z.string().min(1).optional(),
   IMAGE_API_KEY: z.string().min(1).optional(),
   BG_REMOVAL_API_KEY: z.string().min(1).optional(),

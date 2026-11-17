@@ -36,12 +36,14 @@ export function TemplateGallerySkeleton() {
 export function TemplatesGallery({
   templates,
   error,
+  initialCategory = "all",
 }: {
   templates: TemplateSummary[];
   error?: AppError | null;
+  initialCategory?: string;
 }) {
   const [query, setQuery] = React.useState("");
-  const [category, setCategory] = React.useState("all");
+  const [category, setCategory] = React.useState(initialCategory || "all");
   const categories = React.useMemo(
     () => Array.from(new Set(templates.map((template) => template.category))).sort(),
     [templates],

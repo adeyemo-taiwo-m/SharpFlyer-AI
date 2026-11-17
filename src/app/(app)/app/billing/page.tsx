@@ -1,10 +1,15 @@
-export default function BillingPlaceholderPage() {
-  return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-3 px-5 py-8 md:px-8 lg:px-10">
-      <h1 className="text-h1 text-foreground">Billing and credits</h1>
-      <p className="max-w-prose text-body text-muted-foreground">
-        Manage your credits and billing history.
-      </p>
-    </div>
-  );
+import { BillingPage } from "@/components/sharpflyer/billing-page";
+import { getBillingOverview } from "@/server/billing";
+
+export default async function BillingRoute({
+  searchParams,
+}: {
+  searchParams: Promise<{ payment?: string }>;
+}) {
+  const overview = await getBillingOverview();
+  if (!overview.ok) {
+    return <div className="mx-auto max-w-[720px] px-5 py-8 text-body text-danger-text">{overview.error.message}</div>;
+  }
+  const params = await searchParams;
+  return <BillingPage overview={overview.value} paymentReference={params.payment} />;
 }

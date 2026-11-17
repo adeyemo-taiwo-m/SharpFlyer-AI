@@ -20,7 +20,10 @@ import {
 } from "@/server/storage";
 import {
   createDraftFromTemplate,
+  deleteFlyer,
+  duplicateFlyer,
   exportFlyer,
+  listUserFlyers,
   requestPreviewRender,
   saveDraft,
   type ExportFlyerResult,
@@ -28,6 +31,7 @@ import {
   type PreviewRenderResult,
 } from "@/server/flyers";
 import type { AssetRow, FlyerRow } from "@/types/database";
+import type { FlyerListItem } from "@/server/flyers";
 import type { RenderIssue } from "@/types/render";
 import { err, ok, type Result } from "@/types/result";
 
@@ -148,6 +152,20 @@ export async function exportFlyerAction(
   exportOptions: ExportOptions | number = {},
 ): Promise<Result<ExportFlyerResult, AppError & { issues?: RenderIssue[] }>> {
   return exportFlyer(flyerId, exportOptions);
+}
+
+export async function duplicateFlyerAction(flyerId: string): Promise<Result<{ draftId: string }, AppError>> {
+  const duplicated = await duplicateFlyer(flyerId);
+  if (!duplicated.ok) return duplicated;
+  return ok({ draftId: duplicated.value.id });
+}
+
+export async function deleteFlyerAction(flyerId: string): Promise<Result<true, AppError>> {
+  return deleteFlyer(flyerId);
+}
+
+export async function listUserFlyersAction(): Promise<Result<FlyerListItem[], AppError>> {
+  return listUserFlyers();
 }
 
 /**

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Coins } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetClose,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -20,7 +22,7 @@ import { cn } from "@/lib/utils";
  * - Pill in the app bar: `Coins` icon (16px) + tabular count ("12"), `callout`, `surface` background, height 36.
  * - Low state (3 or fewer): `warning-tint` background and `warning` text.
  * - Empty state (0): `danger-tint` and `danger-text`.
- * - Tapping opens a sheet showing balance and a disabled "Buy credits" button with a plain note (Phase 5 completes payment checkout).
+ * - Tapping opens a sheet showing balance, action costs, and a link to billing.
  */
 export function CreditBadge({
   balance,
@@ -66,7 +68,7 @@ export function CreditBadge({
         <SheetHeader>
           <SheetTitle>Your credits</SheetTitle>
           <SheetDescription>
-            Each high-resolution flyer export uses 1 credit. Previews and re-downloads of exported versions are free.
+            Previews and re-downloads are free. A new high-resolution flyer export uses 1 credit.
           </SheetDescription>
         </SheetHeader>
 
@@ -89,11 +91,13 @@ export function CreditBadge({
         )}
 
         <SheetFooter className="mt-4">
-          <Button variant="brand" className="w-full" disabled>
-            Buy credits
-          </Button>
+          <SheetClose asChild>
+            <Button asChild variant="brand" className="w-full">
+              <Link href="/app/billing">Buy credits</Link>
+            </Button>
+          </SheetClose>
           <p className="text-center text-caption text-muted-foreground">
-            Online credit purchases open in the next update. Your drafts stay saved.
+            Your drafts stay saved while you add credits.
           </p>
         </SheetFooter>
       </SheetContent>

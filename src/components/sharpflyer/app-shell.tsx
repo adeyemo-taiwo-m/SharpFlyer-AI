@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Coins,
@@ -93,13 +94,16 @@ function resolvePageTitle(pathname: string): {
 export function AppShell({
   initialBalance,
   userEmail,
+  needsOnboarding,
   children,
 }: {
   initialBalance: number;
   userEmail: string;
+  needsOnboarding: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname() ?? "/app";
+  const router = useRouter();
   const [creditBalance, setCreditBalance] = React.useState(initialBalance);
   const [autoSaveStatus, setAutoSaveStatus] = React.useState<AutoSaveStatus>("idle");
   const [creditSheetOpen, setCreditSheetOpen] = React.useState(false);
@@ -110,6 +114,10 @@ export function AppShell({
   const openCreditSheet = React.useCallback(() => {
     setCreditSheetOpen(true);
   }, []);
+
+  React.useEffect(() => {
+    if (needsOnboarding && pathname !== "/app/onboarding") router.replace("/app/onboarding");
+  }, [needsOnboarding, pathname, router]);
 
   return (
     <AppShellContext.Provider

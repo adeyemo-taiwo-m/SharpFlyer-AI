@@ -58,6 +58,10 @@ export type ExportFlyerResult = {
   warnings: RenderIssue[];
 };
 
+export type FlyerListItem = FlyerRow & {
+  previewUrl: string | null;
+};
+
 const createDraftSchema = z.object({
   templateId: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Choose a valid template."),
   format: FormatSchema.optional(),
@@ -635,4 +639,93 @@ export async function exportFlyer(
       warnings: renderRes.value.warnings,
     });
   });
+}
+
+export async function listUserFlyers(
+  options: FlyersServiceOptions = {},
+): Promise<Result<FlyerListItem[], AppError>> {
+  ensureNonBrowser();
+  const authRes = await requireUser({ sessionUser: options.sessionUser, state: options.state });
+  if (!authRes.ok) return authRes;
+
+  const state = options.state ?? getDefaultCoreDataStoreState();
+  const userId = authRes.value.user.id;
+  const repo = new CoreRepository({ role: "authenticated", userId }, state);
+  const flyersRes = repo.listFlyers(userId);
+  if (!flyersRes.ok) return flyersRes;
+
+  const items: FlyerListItem[] = [];
+  for (const flyer of flyersRes.value) {
+    let previewUrl: string | null = null;
+    if (flyer.preview_asset_id) {
+      const signed = createSignedDownloadUrl(userId, flyer.preview_asset_id, { dbState: state });
+      if (signed.ok) previewUrl = signed.value.url;
+    }
+    items.push({ ...flyer, previewUrl });
+  }
+  return ok(items);
+}
+
+export async function duplicateFlyer(
+  flyerId: string,
+  options: FlyersServiceOptions = {},
+): Promise<Result<FlyerRow, AppError>> {
+  ensureNonBrowser();
+  const authRes = await requireUser({ sessionUser: options.sessionUser, state: options.state });
+  if (!authRes.ok) return authRes;
+
+  const state = options.state ?? getDefaultCoreDataStoreState();
+  const userId = authRes.value.user.id;
+  const repo = new CoreRepository({ role: "authenticated", userId }, state);
+  const sourceRes = repo.getFlyer(flyerId);
+  if (!sourceRes.ok) return sourceRes;
+  const source = sourceRes.value;
+
+  return repo.insertFlyer({
+    user_id: userId,
+    title: `${source.title} copy`.slice(0, 120),
+    template_id: source.template_id,
+    template_version: source.template_version,
+    format: source.format,
+    theme_id: source.theme_id,
+    content: { ...source.content, productImageAssetIds: [...source.content.productImageAssetIds] },
+    status: "draft",
+    preview_asset_id: null,
+  });
+}
+
+export async function deleteFlyer(
+  flyerId: string,
+  options: FlyersServiceOptions = {},
+): Promise<Result<true, AppError>> {
+  ensureNonBrowser();
+  const authRes = await requireUser({ sessionUser: options.sessionUser, state: options.state });
+  if (!authRes.ok) return authRes;
+
+  const state = options.state ?? getDefaultCoreDataStoreState();
+  const storageState = options.storageState ?? getDefaultStorageServiceState();
+  const userId = authRes.value.user.id;
+  const repo = new CoreRepository({ role: "authenticated", userId }, state);
+  const sourceRes = repo.getFlyer(flyerId);
+  if (!sourceRes.ok) return sourceRes;
+
+  const versionsRes = repo.listFlyerVersions(flyerId);
+  if (!versionsRes.ok) return versionsRes;
+  const serviceRepo = new CoreRepository({ role: "service_role" }, state);
+  const assetIds = new Set<string>();
+  if (sourceRes.value.preview_asset_id) assetIds.add(sourceRes.value.preview_asset_id);
+  for (const version of versionsRes.value) {
+    if (version.export_asset_id) assetIds.add(version.export_asset_id);
+    state.flyerVersions.delete(version.id);
+  }
+  for (const assetId of assetIds) {
+    const assetRes = serviceRepo.getAsset(assetId);
+    if (assetRes.ok) {
+      storageState.storedObjects.delete(assetRes.value.bucket_path);
+      serviceRepo.deleteAsset(assetId);
+    }
+  }
+  const deletedRes = repo.deleteFlyer(flyerId);
+  if (!deletedRes.ok) return deletedRes;
+  return ok(true);
 }

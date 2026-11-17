@@ -12,6 +12,10 @@ export type StorageBucketName = "uploads" | "renders";
 export type AllowedUploadMime = "image/png" | "image/jpeg" | "image/webp" | "image/svg+xml";
 export type FlyerStatus = "draft" | "rendered" | "exported";
 export type CreditReason = "grant" | "purchase" | "export" | "refund" | "adjustment";
+export type PaymentProduct = "credit_pack" | "subscription";
+export type PaymentStatus = "pending" | "succeeded" | "failed" | "abandoned";
+export type SubscriptionStatus = "incomplete" | "active" | "past_due" | "grace" | "cancelled";
+export type WebhookEventStatus = "pending" | "processed" | "ignored" | "failed";
 
 export type ProfileRow = {
   id: string;
@@ -105,4 +109,50 @@ export type CreditLedgerRow = {
   reason: CreditReason;
   reference_id: string;
   created_at: string;
+};
+
+export type PaymentRow = {
+  id: string;
+  user_id: string;
+  provider: "paystack";
+  product_type: PaymentProduct;
+  product_id: string;
+  provider_reference: string;
+  amount_kobo: number;
+  currency: "NGN";
+  credits: number;
+  status: PaymentStatus;
+  checkout_url: string | null;
+  failure_reason: string | null;
+  provider_payload: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+  paid_at: string | null;
+};
+
+export type SubscriptionRow = {
+  id: string;
+  user_id: string;
+  provider: "paystack";
+  provider_reference: string | null;
+  provider_token: string | null;
+  plan_id: string;
+  status: SubscriptionStatus;
+  monthly_credits: number;
+  current_period_start: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type WebhookEventRow = {
+  id: string;
+  provider: "paystack";
+  event_id: string;
+  event_type: string;
+  status: WebhookEventStatus;
+  payload: Record<string, unknown>;
+  received_at: string;
+  processed_at: string | null;
 };

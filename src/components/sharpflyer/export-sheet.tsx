@@ -89,9 +89,17 @@ export function ExportSheet({
     }
   }
 
+  function handleOpenExport() {
+    if (balance < 1) {
+      onOpenCredits();
+      return;
+    }
+    setOpen(true);
+  }
+
   return (
     <>
-      <Button type="button" variant="brand" size="lg" className="w-full" disabled={disabled} onClick={() => setOpen(true)}>
+      <Button type="button" variant="brand" size="lg" className="w-full" disabled={disabled} onClick={handleOpenExport}>
         Export flyer
       </Button>
 

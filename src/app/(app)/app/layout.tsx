@@ -21,6 +21,7 @@ export default async function AuthenticatedAppLayout({
     <AppShell
       initialBalance={initialBalance}
       userEmail={authRes.value.user.email}
+      needsOnboarding={authRes.value.profile.onboarding_state === "not_started"}
     >
       {children}
     </AppShell>

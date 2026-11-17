@@ -36,7 +36,7 @@ export const APP_ERROR_MESSAGES: Record<AppErrorCode, string> = {
   AI_INVALID_OUTPUT: "Suggestions are not available right now. You can write your own copy.",
   AI_LIMIT_REACHED: "You have reached the suggestion limit for now.",
   AI_REFUSED: "Suggestions are not available for that request. You can write your own copy.",
-  PAYMENT_FAILED: "Payment did not go through. Try again.",
+  PAYMENT_FAILED: "Payment didn't go through. Try again.",
   RATE_LIMITED: "Too many requests. Wait a moment and try again.",
   INTERNAL: "Something went wrong. Try again.",
 };
